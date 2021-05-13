@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <title>Day Night Simulation</title>
+  <link href="./main.css" rel="stylesheet">
+  <script src="./main.js"></script>
+</head>
+
+<body>
+  <!-- Rounded switch -->
+  <div class="main day">
+
+    <div class="main__title">day night simulation</div>
+    <div class="main__subtitle">concept from <a href="https://codepen.io/Catagen/pen/PqYdXR/" target="__blank">Szymon
+        Stypa's codepen</a></div>
+
+    <!--   中間圓形區塊 -->
+    <div class="main__center-circle day">
+      <div class="main__center-circle--bottom day"></div>
+      <!--     太陽 -->
+      <div class="sun up"></div>
+
+      <!--     月亮 -->
+      <div class="moon up">
+        <div class="moon__hole1"></div>
+        <div class="moon__hole2"></div>
+        <div class="moon__hole3"></div>
+
+        <!--       星星 -->
+        <div class="star1"></div>
+        <div class="star2"></div>
+        <div class="star3"></div>
+        <div class="star4"></div>
+        <div class="star5"></div>
+        <div class="star6"></div>
+      </div>
+    </div>
+
+    <!--   switch -->
+    <div class="main__switch-area">
+      <label class="switch">
+        <input type="checkbox" id="switch-checkbox">
+        <span class="slider round"></span>
+      </label>
+    </div>
+  </div>
+</body>
+
+</html>
