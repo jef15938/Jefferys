@@ -31,6 +31,8 @@ html {
     font-weight: bolder;
     margin: 30px auto 30px auto;
     top: 10px;
+    width: 100%;
+    text-align: center;
   }
 
   &__subtitle {
@@ -38,6 +40,8 @@ html {
     font-size: 17px;
     font-weight: bolder;
     margin: 0 auto 0 auto;
+    width: 100%;
+    text-align: center;
   }
 
   // 星球
@@ -209,6 +213,8 @@ html {
     position: relative;
     margin: auto;
     height: auto;
+    margin-top: 50px;
+    text-align: center;
 
     .switch {
       position: relative;

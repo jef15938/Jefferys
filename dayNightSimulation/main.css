@@ -41,6 +41,8 @@ html {
   font-weight: bolder;
   margin: 30px auto 30px auto;
   top: 10px;
+  width: 100%;
+  text-align: center;
 }
 
 .main__subtitle {
@@ -48,6 +50,8 @@ html {
   font-size: 17px;
   font-weight: bolder;
   margin: 0 auto 0 auto;
+  width: 100%;
+  text-align: center;
 }
 
 .main__center-circle {
@@ -227,6 +231,8 @@ html {
   position: relative;
   margin: auto;
   height: auto;
+  margin-top: 50px;
+  text-align: center;
   /* Hide default HTML checkbox */
   /* The slider */
   /* Rounded sliders */

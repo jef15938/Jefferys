@@ -1,4 +1,4 @@
-$(document).on("click", "#switch-checkbox", (event) => {
+$(document).on("click", "#switch-checkbox", function (event) {
 
   const isCheck = $(event.currentTarget).is(":checked");
 
