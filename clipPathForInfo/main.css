@@ -1,0 +1,68 @@
+body {
+  margin: 0;
+  font-family: "Nunito";
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.container__content {
+  width: 300px;
+  height: 200px;
+}
+
+.container__content:hover .inner {
+  -webkit-clip-path: circle(100%);
+          clip-path: circle(100%);
+  background: #1bb35d;
+}
+
+.container__content:hover .inner .icon {
+  opacity: 0;
+}
+
+.container__content .inner {
+  position: relative;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+  -webkit-clip-path: circle(10% at 90% 15%);
+          clip-path: circle(10% at 90% 15%);
+  color: white;
+  background: #0c47a6;
+  border-radius: 15px;
+  -webkit-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+
+.container__content .inner .icon {
+  color: white;
+  float: right;
+  margin-top: 2px;
+  margin-right: 7px;
+  -webkit-transition: all .5s ease-in-out;
+  transition: all .5s ease-in-out;
+}
+
+.container__content .inner .title {
+  letter-spacing: 2px;
+}
+
+.container__content .inner .content {
+  font-size: 18px;
+}
+/*# sourceMappingURL=main.css.map */

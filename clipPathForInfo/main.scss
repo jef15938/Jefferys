@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  font-family: "Nunito"
+}
+
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__content {
+    width: 300px;
+    height: 200px;
+
+    &:hover .inner {
+      clip-path: circle(100%);
+      // background-image:  linear-gradient(to left, #0c47a6, #1bb35d);
+      background: #1bb35d;
+      // background: red;
+    }
+
+    &:hover .inner .icon {
+      opacity: 0;
+    }
+
+    .inner {
+      position: relative;
+      box-sizing: border-box;
+      padding: 20px;
+      height: 100%;
+      width: 100%;
+      clip-path: circle(10% at 90% 15%);
+      color: white;
+      background: #0c47a6;
+      border-radius: 15px;
+      transition: all 1s ease-in-out;
+
+      .icon {
+        color: white;
+        float: right;
+        margin-top: 2px;
+        margin-right: 7px;
+        transition: all .5s ease-in-out;
+      }
+
+      .title {
+        letter-spacing: 2px;
+      }
+
+      .content {
+        font-size: 18px;
+      }
+    }
+
+
+  }
+}
