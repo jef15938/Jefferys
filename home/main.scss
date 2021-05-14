@@ -1,0 +1,70 @@
+body {
+  margin: 0;
+}
+
+.main {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  background-color: white;
+  transition: 1s background-color ease-in-out;
+
+  &.background-color-black {
+    background-color: black;
+  }
+}
+
+.pong-img {
+  width: 60vw;
+  height: auto;
+
+  >img {
+    max-width: 100%;
+  }
+}
+
+.button-3d {
+  position: relative;
+  // margin-top: 50px;
+
+  &__main,
+  &__shadow {
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    border-radius: 10px;
+    text-align: center;
+    line-height: 50px;
+  }
+
+  &__main {
+    position: relative;
+    background-color: #fff;
+    border-color: black;
+    z-index: 2;
+    transform: translate(-7px, -7px);
+    transition: transform 0.15s ease-out;
+    user-select: none;
+
+    &:active {
+      transform: translateZ(0px);
+    }
+  }
+
+  &__shadow {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #ddd;
+    border-color: #aaaaaa;
+    z-index: 1;
+    // box-shadow: 1px 1px 394px 78px rgba(62, 36, 36, 1);
+    // -webkit-box-shadow: 1px 1px 394px 78px rgba(62, 36, 36, 1);
+    // -moz-box-shadow: 1px 1px 394px 78px rgba(62, 36, 36, 1);
+  }
+}
