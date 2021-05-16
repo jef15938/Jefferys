@@ -1,0 +1,75 @@
+.main {
+  padding: 0px;
+  max-width: 900px;
+  margin: 50px auto 0px auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.main__card {
+  -webkit-box-shadow: 0 0.6px 2.8px rgba(0, 0, 0, 0.075), 0 5px 22px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0.6px 2.8px rgba(0, 0, 0, 0.075), 0 5px 22px rgba(0, 0, 0, 0.15);
+  border-radius: 20px;
+  width: 360px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  height: 100%;
+}
+
+.main-card {
+  padding: 30px;
+  text-align: center;
+}
+
+.main-card__image {
+  width: 300px;
+  height: 200px;
+}
+
+.main-card__image > img {
+  width: 100%;
+}
+
+.main-card__title {
+  margin: 30px auto 0px auto;
+  font-size: 30px;
+  font-weight: bolder;
+}
+
+.main-card__description {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.loading {
+  background: #ffffff;
+  background: linear-gradient(110deg, rgba(0, 0, 0, 0.06) 40%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.06) 60%);
+  background-size: 200% 100%;
+  background-position-x: 120%;
+  -webkit-animation: loading 1s infinite;
+          animation: loading 1s infinite;
+}
+
+.loading .loading--primary-color {
+  background: #cccccc;
+  color: #cccccc;
+}
+
+@-webkit-keyframes loading {
+  to {
+    background-position-x: -30%;
+  }
+}
+
+@keyframes loading {
+  to {
+    background-position-x: -30%;
+  }
+}
+/*# sourceMappingURL=main.css.map */
