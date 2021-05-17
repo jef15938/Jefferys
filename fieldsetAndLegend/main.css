@@ -1,0 +1,268 @@
+body {
+  margin: 0;
+  padding: 0px 20px;
+  overflow-x: hidden;
+}
+
+*[class^="demo"] {
+  margin: 50px 0px 10px 0px;
+}
+
+.demo2 > fieldset {
+  height: 50px;
+}
+
+.demo2 > fieldset > legend {
+  text-align: center;
+  padding: 0px 20px;
+}
+
+.demo3 fieldset {
+  position: relative;
+  height: 50px;
+  border: 2px solid rebeccapurple;
+}
+
+.demo3 fieldset > legend {
+  padding: 0px 30px;
+  color: rebeccapurple;
+  font-weight: bold;
+}
+
+.demo3 fieldset > legend::before {
+  content: "";
+  position: absolute;
+  border: 1rem solid rebeccapurple;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  top: 0.3rem;
+  left: -2px;
+}
+
+.demo4 fieldset {
+  position: relative;
+  height: 50px;
+  border: 2px solid cornflowerblue;
+}
+
+.demo4 fieldset > legend {
+  padding: 0px 30px;
+  color: cornflowerblue;
+  font-weight: bold;
+}
+
+.demo4 fieldset > legend::before {
+  content: "";
+  position: absolute;
+  border: 1rem solid cornflowerblue;
+  border-bottom-color: transparent;
+  top: 0.5rem;
+  right: 0px;
+}
+
+.polygan {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media all and (max-width: 700px) {
+  .polygan {
+    -webkit-transform: translateX(10%);
+            transform: translateX(10%);
+  }
+}
+
+.polygan * {
+  border: 0;
+}
+
+.polygan > div {
+  position: relative;
+  margin: 10px auto;
+}
+
+.polygan fieldset {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -100px;
+  margin-top: -5px;
+  width: 120px;
+  height: 120px;
+  border-top: 10px solid #000;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.polygan legend {
+  font-family: "Averia Serif Libre";
+  font-size: 24px;
+  line-height: 10px;
+  font-weight: bold;
+  margin: auto;
+  padding: 2px 10px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.polygan .g-triangle {
+  height: 120px;
+  width: 120px;
+}
+
+.polygan .g-triangle fieldset {
+  -webkit-transform-origin: center 36%;
+          transform-origin: center 36%;
+}
+
+.polygan .g-triangle fieldset:nth-of-type(1) {
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+
+.polygan .g-triangle fieldset:nth-of-type(2) {
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+
+.polygan .g-triangle fieldset:nth-of-type(3) {
+  -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+}
+
+.polygan .g-pentagon {
+  height: 140px;
+  width: 140px;
+}
+
+.polygan .g-pentagon fieldset {
+  border-top-color: deeppink;
+  -webkit-transform-origin: center 71%;
+          transform-origin: center 71%;
+}
+
+.polygan .g-pentagon fieldset legend {
+  color: deeppink;
+}
+
+.polygan .g-pentagon fieldset:nth-of-type(1) {
+  -webkit-transform: rotate(72deg);
+          transform: rotate(72deg);
+}
+
+.polygan .g-pentagon fieldset:nth-of-type(2) {
+  -webkit-transform: rotate(144deg);
+          transform: rotate(144deg);
+}
+
+.polygan .g-pentagon fieldset:nth-of-type(3) {
+  -webkit-transform: rotate(216deg);
+          transform: rotate(216deg);
+}
+
+.polygan .g-pentagon fieldset:nth-of-type(4) {
+  -webkit-transform: rotate(288deg);
+          transform: rotate(288deg);
+}
+
+.polygan .g-hexagon {
+  height: 250px;
+  width: 250px;
+}
+
+.polygan .g-hexagon fieldset {
+  border-top-color: #673ab7;
+  -webkit-transform-origin: center 89%;
+          transform-origin: center 89%;
+}
+
+.polygan .g-hexagon fieldset legend {
+  color: #673ab7;
+}
+
+.polygan .g-hexagon fieldset:nth-of-type(1) {
+  -webkit-transform: rotate(60deg);
+          transform: rotate(60deg);
+}
+
+.polygan .g-hexagon fieldset:nth-of-type(2) {
+  -webkit-transform: rotate(120deg);
+          transform: rotate(120deg);
+}
+
+.polygan .g-hexagon fieldset:nth-of-type(3) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+.polygan .g-hexagon fieldset:nth-of-type(4) {
+  -webkit-transform: rotate(240deg);
+          transform: rotate(240deg);
+}
+
+.polygan .g-hexagon fieldset:nth-of-type(5) {
+  -webkit-transform: rotate(300deg);
+          transform: rotate(300deg);
+}
+
+.polygan .g-hexagon fieldset:nth-of-type(6) {
+  -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+}
+
+.polygan .g-octagon {
+  height: 210px;
+  width: 210px;
+}
+
+.polygan .g-octagon fieldset {
+  border-top-color: #ff5722;
+  -webkit-transform-origin: center 123%;
+          transform-origin: center 123%;
+}
+
+.polygan .g-octagon fieldset legend {
+  color: #ff5722;
+}
+
+.polygan .g-octagon fieldset:nth-of-type(1) {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.polygan .g-octagon fieldset:nth-of-type(2) {
+  -webkit-transform: rotate(90deg);
+          transform: rotate(90deg);
+}
+
+.polygan .g-octagon fieldset:nth-of-type(3) {
+  -webkit-transform: rotate(135deg);
+          transform: rotate(135deg);
+}
+
+.polygan .g-octagon fieldset:nth-of-type(4) {
+  -webkit-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+.polygan .g-octagon fieldset:nth-of-type(5) {
+  -webkit-transform: rotate(225deg);
+          transform: rotate(225deg);
+}
+
+.polygan .g-octagon fieldset:nth-of-type(6) {
+  -webkit-transform: rotate(270deg);
+          transform: rotate(270deg);
+}
+
+.polygan .g-octagon fieldset:nth-of-type(7) {
+  -webkit-transform: rotate(315deg);
+          transform: rotate(315deg);
+}
+
+.polygan .g-octagon fieldset:nth-of-type(8) {
+  -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+}
+/*# sourceMappingURL=main.css.map */
