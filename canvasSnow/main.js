@@ -34,8 +34,6 @@ function initial() {
   for (var i = 0; i < numberOfParticles; i++) {
     particleList.push(new Particle());
   }
-
-  console.log(particleList);
 }
 
 function animate() {
