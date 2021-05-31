@@ -3,7 +3,8 @@ body {
   overflow: hidden;
 }
 
-.button-container {
+.button1-container,
+.button2-container {
   position: relative;
   width: 150px;
   height: 80px;
@@ -18,13 +19,13 @@ body {
           align-items: center;
 }
 
-.button-container__btn {
+.button1-container__btn,
+.button2-container__btn {
   position: relative;
   width: 80px;
   height: 30px;
   z-index: 3;
   line-height: 30px;
-  background: #30a254;
   -webkit-transition: 350ms cubic-bezier(0, 0.5, 0.5, 1);
   transition: 350ms cubic-bezier(0, 0.5, 0.5, 1);
   border-radius: 100px;
@@ -35,21 +36,44 @@ body {
   text-align: center;
 }
 
-.button-container__btn:hover {
+.button1-container__btn:hover,
+.button2-container__btn:hover {
   cursor: pointer;
   -webkit-transform: scale(1.1);
           transform: scale(1.1);
-  background: #51e980;
-  -webkit-box-shadow: 0px 0px 30px #51e980;
-          box-shadow: 0px 0px 30px #51e980;
 }
 
-.button-container__canvas {
+.button1-container__canvas,
+.button2-container__canvas {
   position: absolute;
   width: 100%;
   height: 100%;
   left: 0px;
   top: 0px;
   z-index: 2;
+}
+
+.button1-container .button1-container__btn,
+.button2-container .button1-container__btn {
+  background: #30a254;
+}
+
+.button1-container .button1-container__btn:hover,
+.button2-container .button1-container__btn:hover {
+  background: #51e980;
+  -webkit-box-shadow: 0px 0px 30px #51e980;
+          box-shadow: 0px 0px 30px #51e980;
+}
+
+.button1-container .button2-container__btn,
+.button2-container .button2-container__btn {
+  background: #e95151;
+}
+
+.button1-container .button2-container__btn:hover,
+.button2-container .button2-container__btn:hover {
+  background: red;
+  -webkit-box-shadow: 0px 0px 30px red;
+          box-shadow: 0px 0px 30px red;
 }
 /*# sourceMappingURL=main.css.map */
