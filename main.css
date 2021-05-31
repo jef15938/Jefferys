@@ -1,0 +1,57 @@
+@charset "UTF-8";
+body {
+  margin: 0;
+  padding: 0px 20px;
+  overflow-x: hidden;
+}
+
+*[class^="demo"] {
+  margin: 50px 0px 10px 0px;
+}
+
+.demo2 > fieldset {
+  height: 50px;
+}
+
+.demo2 > fieldset > legend {
+  text-align: center;
+  padding: 0px 20px;
+}
+
+.canvas-block fieldset {
+  position: relative;
+  border: 2px solid deeppink;
+}
+
+.canvas-block fieldset > legend {
+  padding: 0px 30px;
+  color: deeppink;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.canvas-block fieldset > legend::before {
+  content: "";
+  position: absolute;
+  border: 1rem solid deeppink;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+  top: 0.9rem;
+  left: -2px;
+}
+
+.canvas-block ul {
+  list-style-type: none;
+  font-size: 20px;
+}
+
+.canvas-block ul li + li {
+  margin-top: 10px;
+}
+
+.canvas-block ul li:before {
+  content: "⦾ ";
+  margin: 0 .5rem 0 0;
+  color: deeppink;
+}
+/*# sourceMappingURL=main.css.map */
