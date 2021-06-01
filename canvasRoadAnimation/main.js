@@ -1,4 +1,4 @@
-var canvasWidth = 500;
+var canvasWidth = 750;
 var canvasHeight = 100;
 
 var Rectangle = function (x, y, width, height, fillStyle, strokeStyle, lineWidth, velocity) {
@@ -38,9 +38,9 @@ canvas.height = canvasHeight;
 var rectangleList = [];
 
 function initial() {
-  rectangleList.push(new Rectangle(0, 35, 100, 30, '#F8FA15', '#F8FA15', 1, 3));
-  rectangleList.push(new Rectangle(200, 35, 100, 30, '#F8FA15', '#F8FA15', 1, 3));
-  rectangleList.push(new Rectangle(400, 35, 100, 30, '#F8FA15', '#F8FA15', 1, 3));
+  rectangleList.push(new Rectangle(0, 40, 150, 20, '#F8FA15', '#F8FA15', 1, 4));
+  rectangleList.push(new Rectangle(300, 40, 150, 20, '#F8FA15', '#F8FA15', 1, 4));
+  rectangleList.push(new Rectangle(600, 40, 150, 20, '#F8FA15', '#F8FA15', 1, 4));
 }
 function animate() {
 
