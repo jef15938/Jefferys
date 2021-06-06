@@ -32,7 +32,7 @@ function animate() {
     (backgroundAngle >= 60 && backgroundAngle <= 180) ||
     (backgroundAngle >= 240 && backgroundAngle <= 360)
   ) {
-    backgroundAngle += 8;
+    backgroundAngle += 12;
   }
   else {
     backgroundAngle += 5;
