@@ -1,4 +1,4 @@
-var canvasWidth = 765;
+var canvasWidth = 435;
 var canvasHeight = 450;
 var snowList = [];
 var canvas = $('.heartbeat')[0];
@@ -33,54 +33,33 @@ function calcWaypoints(vertices, segmentNumber) {
 
 function initial() {
 
-  var heartBeatXList = [30, 105, 120, 150, 165, 180, 195, 210, 225, 255, 270, 285, 330, 330, 435, 450, 480, 495, 510, 525, 540, 555, 585, 600, 615, 660, 735];
-  var hearBeatYList = [195, 195, 150, 240, 210, 240, 210, 240, 90, 360, 225, 240, 195, 195, 195, 150, 240, 210, 240, 210, 240, 90, 360, 225, 240, 195, 195];
+  // 兩組震幅
+  // var heartBeatXList = [30, 105, 120, 150, 165, 180, 195, 210, 225, 255, 270, 285, 330, 330, 435, 450, 480, 495, 510, 525, 540, 555, 585, 600, 615, 660, 735];
+  // var hearBeatYList = [195, 195, 150, 240, 210, 240, 210, 240, 90, 360, 225, 240, 195, 195, 195, 150, 240, 210, 240, 210, 240, 90, 360, 225, 240, 195, 195];
+
+  // 一組震幅
+  var heartBeatXList = [30, 105, 120, 150, 165, 180, 195, 210, 225, 255, 270, 285, 330, 405];
+  var hearBeatYList = [195, 195, 150, 240, 210, 240, 210, 240, 90, 360, 225, 240, 195, 195];
 
   for (var i = 0; i < heartBeatXList.length; i++) {
     hearbeatList.push(new HeartBeat(heartBeatXList[i], hearBeatYList[i]));
   }
 
-  segmenthearbeatList = calcWaypoints(hearbeatList, 8);
+  segmenthearbeatList = calcWaypoints(hearbeatList, 6);
 }
 
 function animate() {
-
-  if (currentSegmentHearBeatIndex >= segmenthearbeatList.length - 1) {
-    setTimeout(function () {
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-      currentSegmentHearBeatIndex = 0;
-    }, 5000);
-  }
-
-  var currentHearBeat = segmenthearbeatList[currentSegmentHearBeatIndex];
-  var nextHearBeat = segmenthearbeatList[currentSegmentHearBeatIndex + 1];
-
-  ctx.beginPath();
-  ctx.moveTo(currentHearBeat.x, currentHearBeat.y);
-  ctx.lineTo(nextHearBeat.x, nextHearBeat.y);
-  ctx.strokeStyle = 'black';
-  ctx.stroke();
-
-  currentSegmentHearBeatIndex++;
-
-  window.requestAnimationFrame(animate);
-
-}
-
-function animate2() {
   var delay = 0;
   if (currentSegmentHearBeatIndex >= segmenthearbeatList.length) {
-    delay = 1000;
+    delay = 600;
     setTimeout(function () {
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
       currentSegmentHearBeatIndex = 1;
     }, delay);
   }
 
   setTimeout(function () {
     ctx.beginPath();
+    ctx.save();
     ctx.strokeStyle = 'white';
     ctx.lineWidth = 10;
     ctx.lineCap = 'round';
@@ -109,7 +88,6 @@ function animate2() {
         ctx.arc(lastPoint.x, lastPoint.y, 20, 0, Math.PI * 2);
         ctx.stroke();
         ctx.fill();
-
       }
       else {
         var betweenPoint = segmenthearbeatList[i];
@@ -117,15 +95,16 @@ function animate2() {
       }
     }
 
+    ctx.restore();
     currentSegmentHearBeatIndex++;
 
-    window.requestAnimationFrame(animate2);
+    window.requestAnimationFrame(animate);
   }, delay);
 
 
 }
 
 initial();
-animate2();
+animate();
 
 
