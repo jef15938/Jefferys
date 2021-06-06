@@ -49,10 +49,14 @@ Dot.prototype.update = function () {
 
 // 6. 根據物件狀態, 繪製到 Canvas 上
 Dot.prototype.draw = function () {
+  ctx.save();
+
   ctx.beginPath();
   ctx.fillStyle = 'black';
   ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
   ctx.fill();
+
+  ctx.restore();
 }
 
 

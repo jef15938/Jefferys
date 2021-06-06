@@ -4,6 +4,17 @@ var canvas = $('#canvas')[0];
 var ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
+
+var requestAnimationFrame = (
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function (callback) {
+    window.setTimeout(callback, 1000 / 60)
+  }
+);
 var $d = $.Deferred();
 
 var backgroundAngle = 0;
@@ -53,7 +64,7 @@ function animate() {
   ctx.fillRect(0, 0, canvasWidth, 159);
   ctx.fillRect(0, 348, canvasWidth, 500);
 
-  window.requestAnimationFrame(animate);
+  requestAnimationFrame(animate);
 }
 
 function initial() {

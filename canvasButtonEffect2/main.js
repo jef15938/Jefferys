@@ -11,6 +11,20 @@ var ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
+var requestAnimationFrame = (
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function (callback) {
+    window.setTimeout(callback, 1000 / 60)
+  }
+);
+
+var cancelAnimationFrame = window.cancelAnimationFrame || window.mozCancelAnimationFrame;
+
+
 // 每顆粒子
 var Particle = function (context, fillColor) {
   this.context = context;
@@ -25,7 +39,7 @@ Particle.prototype.initial = function (fillColor) {
   this.velocityX = (Math.random() * 2) - 1;  // -1 ~ 1
   this.velocityY = (Math.random() * 2) - 1;  // -1 ~ 1
   this.velocityOpacity = (Math.random() * 0.1) * -1; // -0.1 ~ 0
-  this.size = Math.random() * 1.5 + 5; // 5 ~ 1.5
+  this.size = Math.random() * 1.5 + 5; // 5 ~ 6.5
   this.fillColor = fillColor;
 }
 
@@ -44,26 +58,22 @@ Particle.prototype.update = function () {
 // 畫圓圈
 Particle.prototype.drawCircle = function () {
   this.context.save();
-
   this.context.beginPath();
   this.context.globalAlpha = this.opacity;
   this.context.fillStyle = this.fillColor;
   this.context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
   this.context.fill();
-
   this.context.restore();
 }
 
 // 畫正方形
 Particle.prototype.drawRectangle = function () {
   this.context.save();
-
   this.context.beginPath();
   this.context.save();
   this.context.globalAlpha = this.opacity;
   this.context.strokeStyle = this.fillColor;
   this.context.strokeRect(this.x, this.y, this.size * 1.5, this.size * 1.5);
-
   this.context.restore();
 }
 
@@ -85,17 +95,17 @@ function animate() {
     particleList[i].drawCircle();
   }
 
-  requestId = window.requestAnimationFrame(animate);
+  requestId = requestAnimationFrame(animate);
 
 }
 
-// 停止動畫
+// 結束動畫
 function stopAnimate() {
 
   if (requestId) {
-    window.cancelAnimationFrame(requestId);
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    cancelAnimationFrame(requestId);
     requestId = undefined;
   }
 
