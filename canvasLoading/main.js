@@ -50,6 +50,7 @@ function animate() {
   ctx.save();
   ctx.fillStyle = gradient.pattern;
 
+  // 旋轉
   ctx.translate(canvasWidth / 2, canvasHeight / 2);
   ctx.rotate(backgroundAngle * Math.PI / 180);
   ctx.translate(-(canvasWidth / 2), -(canvasHeight / 2));
