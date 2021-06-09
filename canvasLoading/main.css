@@ -1,6 +1,7 @@
 body {
   margin: 0;
   overflow: hidden;
+  background: red;
 }
 
 canvas {
@@ -8,7 +9,6 @@ canvas {
   top: 0px;
   left: 50%;
   -webkit-transform: translateX(-50%);
-  transform: translateX(-50%);
+          transform: translateX(-50%);
 }
-
 /*# sourceMappingURL=main.css.map */

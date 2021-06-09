@@ -1,0 +1,60 @@
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+.main {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main__control-board {
+  position: absolute;
+  width: 100%;
+  height: calc(100% / 6);
+  bottom: 0px;
+}
+
+.main .main-control-board {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.main .main-control-board__button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  -ms-flex: 1;
+      flex: 1;
+  padding: 10px;
+  border: 3px solid black;
+}
+
+.main .main-control-board__button > .circle {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  height: 100px;
+  width: 100px;
+  text-align: center;
+  line-height: 100px;
+  border-radius: 50%;
+  font-size: 25px;
+  font-weight: bolder;
+  background: black;
+  color: white;
+}
+/*# sourceMappingURL=main.css.map */
