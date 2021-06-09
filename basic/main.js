@@ -6,8 +6,8 @@
 // 5. (如果需要) 每次繪製時的第一步, "擦掉" 畫布的內容
 // 6. 根據物件狀態, 繪製到 Canvas 上
 
-var canvasWidth = 1920;
-var canvasHeight = 1080;
+var canvasWidth = 500;
+var canvasHeight = 100;
 var canvas = $('#canvas')[0];
 var ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
@@ -49,10 +49,14 @@ Dot.prototype.update = function () {
 
 // 6. 根據物件狀態, 繪製到 Canvas 上
 Dot.prototype.draw = function () {
+  ctx.save();
+
   ctx.beginPath();
   ctx.fillStyle = 'black';
   ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
   ctx.fill();
+
+  ctx.restore();
 }
 
 

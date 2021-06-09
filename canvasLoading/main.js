@@ -4,6 +4,17 @@ var canvas = $('#canvas')[0];
 var ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
+
+var requestAnimationFrame = (
+  window.requestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.mozRequestAnimationFrame ||
+  window.oRequestAnimationFrame ||
+  window.msRequestAnimationFrame ||
+  function (callback) {
+    window.setTimeout(callback, 1000 / 60)
+  }
+);
 var $d = $.Deferred();
 
 var backgroundAngle = 0;
@@ -21,7 +32,7 @@ function animate() {
     (backgroundAngle >= 60 && backgroundAngle <= 180) ||
     (backgroundAngle >= 240 && backgroundAngle <= 360)
   ) {
-    backgroundAngle += 8;
+    backgroundAngle += 13;
   }
   else {
     backgroundAngle += 5;
@@ -39,6 +50,7 @@ function animate() {
   ctx.save();
   ctx.fillStyle = gradient.pattern;
 
+  // 旋轉
   ctx.translate(canvasWidth / 2, canvasHeight / 2);
   ctx.rotate(backgroundAngle * Math.PI / 180);
   ctx.translate(-(canvasWidth / 2), -(canvasHeight / 2));
@@ -53,7 +65,7 @@ function animate() {
   ctx.fillRect(0, 0, canvasWidth, 159);
   ctx.fillRect(0, 348, canvasWidth, 500);
 
-  window.requestAnimationFrame(animate);
+  requestAnimationFrame(animate);
 }
 
 function initial() {

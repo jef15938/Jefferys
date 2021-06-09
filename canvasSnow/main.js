@@ -16,7 +16,7 @@ canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 
 // 0. 判斷 requestAnimationFrame 支援度
-var requestAnimationFrame =
+var requestAnimationFrame = (
   window.requestAnimationFrame ||
   window.webkitRequestAnimationFrame ||
   window.mozRequestAnimationFrame ||
@@ -25,6 +25,7 @@ var requestAnimationFrame =
   function (callback) {
     window.setTimeout(callback, 1000 / 60)
   }
+);
 
 // 1. 定義動畫要操作的 "物件" 
 var Snow = function () {
@@ -32,8 +33,8 @@ var Snow = function () {
   // 2. 物件初始化的狀態
   this.x = Math.random() * canvasWidth;
   this.y = Math.random() * canvasHeight;
-  this.velocity = Math.random() * 3.5 + 0.5;
-  this.size = Math.random() * 3.5 + 1;
+  this.velocity = Math.random() * 3.5 + 0.5; // 0.5  ~ 4
+  this.size = Math.random() * 3.5 + 1; // 1 ~ 4.5
 }
 
 // 3. 瀏覽器每次繪製時要 "如何" 操作物件達到想要的效果
@@ -51,10 +52,12 @@ Snow.prototype.update = function () {
 
 // 6. 把雪花繪製到 Canvas 上
 Snow.prototype.draw = function () {
+  ctx.save();
   ctx.beginPath();
   ctx.fillStyle = 'white';
   ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
   ctx.fill();
+  ctx.restore();
 }
 
 
