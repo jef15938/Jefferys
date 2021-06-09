@@ -1,4 +1,4 @@
-var mainCanvasWidth = window.innerWidth;
+var mainCanvasWidth = Math.min(window.innerWidth, 944);
 var mainCanvasHeight = Math.ceil(window.innerHeight / 6) * 5;
 var mainCanvas = $('.main__canvas')[0];
 var mainCtx = mainCanvas.getContext('2d');
@@ -8,7 +8,7 @@ var mainCtx = mainCanvas.getContext('2d');
 mainCanvas.width = mainCanvasWidth;
 mainCanvas.height = mainCanvasHeight;
 
-var numberOfAnswer = 100;
+var numberOfAnswer = 1000;
 var showAnswerRows = 5;
 var answerList = [];
 var correctCount = 0;

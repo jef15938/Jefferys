@@ -11,9 +11,13 @@ body {
 // }
 
 .main {
+  position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  margin: auto;
+  border: 3px solid black;
+  max-width: 944px;
 
   &__control-board {
     position: absolute;
