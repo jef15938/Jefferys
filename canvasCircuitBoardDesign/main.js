@@ -20,6 +20,7 @@ $('.bottom-choose').on('click', '>.bottom-choose__item', function (event) {
   }
   else if (targetId === '2') {
     $('.main-block').css('transform', 'translate(-1440px, 0px)');
+    resetFan();
   }
   else if (targetId === '3') {
     $('.main-block').css('transform', 'translate(-720px, -766px)');
@@ -81,7 +82,7 @@ function initialMainCanvas() {
 
 
 }
-// 中央電路板
+// 3. 中央電路板
 function initialCenterCircuitBoardCanvas() {
   var circuitBoardWidth = 400;
   var circuitBoardHeight = 400;
@@ -119,7 +120,64 @@ function initialCenterCircuitBoardCanvas() {
   circuitBoardCtx.fill();
 }
 
+// 2. 風扇
+function initialFan() {
+  var fanCanvasWidth = 500;
+  var fanCanvasHeight = 500;
+  var fanCanvas = $('.fan')[0];
+  var fanCtx = fanCanvas.getContext('2d');
+  fanCanvas.width = fanCanvasWidth;
+  fanCanvas.height = fanCanvasHeight;
+
+  const image = new Image();
+  image.onload = imageOnLoad; // 圖片 load 完成要執行的 function
+
+  // 設定圖片 src
+  image.src = './img/fan.svg';
+
+  function imageOnLoad() {
+    //  從 canvas 點 0, 0(左上角) 開始畫這張圖片
+    animateFan(fanCtx, this);
+  }
+}
+
+var rotateFanAngle = 0;
+var base = 1;
+function resetFan() {
+  rotateFanAngle = 0;
+  base = 1;
+}
+
+function animateFan(ctx, image) {
+  ctx.save();
+  ctx.translate(500 / 2, 500 / 2);
+  ctx.rotate(rotateFanAngle);
+  ctx.translate(-500 / 2, -500 / 2);
+  // ctx.fillStyle = '#999999';
+  ctx.fillStyle = '#666666';
+  ctx.fillRect(0, 0, 500, 500);
+  ctx.drawImage(image, 0, 0);
+  if (base < 10) {
+    base += 0.01;
+  }
+  rotateFanAngle += (0.01 * base);
+  if (rotateFanAngle >= 360) {
+    rotateFanAngle = 0;
+  }
+  ctx.restore();
+  ctx.save();
+  ctx.strokeStyle = '#444444';
+  ctx.lineWidth = 20;
+  ctx.strokeRect(10, 10, 480, 480);
+  ctx.fillStyle = '#dddddd';
+  ctx.arc(250, 250, 60, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+  window.requestAnimationFrame(animateFan.bind(this, ctx, image));
+}
+
 initialCenterCircuitBoardCanvas();
 initialMainCanvas();
+initialFan();
 
 

@@ -55,6 +55,7 @@ body a {
   height: 100%;
   width: 50%;
   left: 0px;
+  pointer-events: none;
 }
 
 .main-block__1 .button {
@@ -88,7 +89,15 @@ body a {
 .main-block__2 {
   top: 0px;
   left: 1440px;
-  background: orange;
+  background: black;
+}
+
+.main-block__2 .fan {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  left: 100px;
 }
 
 .main-block__3 {
