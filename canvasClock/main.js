@@ -22,7 +22,6 @@ var Clock = function (clockConfig) {
   this.secondHandStyle = clockConfig.secondHandStyle;
 }
 
-
 Clock.prototype.draw = function () {
 
   var ctx = this.ctx;
@@ -71,7 +70,7 @@ Clock.prototype.draw = function () {
   ctx.lineWidth = 20;
   ctx.lineCap = 'round';
   ctx.strokeStyle = this.hourHandStyle;
-  ctx.rotate(hr * (2 * Math.PI / 12) + (2 * Math.PI / 12) / 60 * min + (2 * Math.PI / 12) / 60 / 60 * sec)
+  ctx.rotate((hr * (2 * Math.PI / 12)) + ((2 * Math.PI / 12) / 60 * min) + ((2 * Math.PI / 12) / 60 / 60 * sec));
   ctx.beginPath();
   ctx.moveTo(-10, 0);
   ctx.lineTo(100, 0);
@@ -84,7 +83,7 @@ Clock.prototype.draw = function () {
   ctx.lineWidth = 10;
   ctx.lineCap = 'round';
   ctx.strokeStyle = this.minuteHandStyle;
-  ctx.rotate((2 * Math.PI / 60) * min + (2 * Math.PI / 60) / 60 * sec)
+  ctx.rotate(((2 * Math.PI / 60) * min) + ((2 * Math.PI / 60) / 60 * sec));
   ctx.beginPath();
   ctx.moveTo(-20, 0);
   ctx.lineTo(180, 0);
@@ -105,7 +104,7 @@ Clock.prototype.draw = function () {
   ctx.restore();
   // 秒針 end
 
-
+  // 圓心小圓點
   ctx.save();
   ctx.fillStyle = this.clockStyle;
   ctx.beginPath();
@@ -113,14 +112,12 @@ Clock.prototype.draw = function () {
   ctx.fill();
   ctx.closePath();
   ctx.restore();
-
   ctx.restore();
 
 }
 
 // 畫座標網格
 Clock.prototype.grid = function () {
-  return;
 
   var ctx = this.ctx;
 
