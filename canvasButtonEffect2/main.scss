@@ -25,7 +25,7 @@ body {
     z-index: 3;
     line-height: 30px;
 
-    transition: 350ms cubic-bezier(0, 0.5, 0.5, 1);
+    transition: transform 0.35;
     border-radius: 100px;
     font-family: Montserrat;
     font-weight: 600;
@@ -33,10 +33,24 @@ body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     text-align: center;
 
+
+    background: #30a254;
+
     &:hover {
       cursor: pointer;
       transform: scale(1.1);
+      background: #51e980;
+      box-shadow: 0px 0px 30px #51e980;
     }
+
+    // background: #e95151;
+
+    // &:hover {
+    //   cursor: pointer;
+    //   transform: scale(1.1);
+    //   background: red;
+    //   box-shadow: 0px 0px 30px red;
+    // }
   }
 
   &__canvas {
@@ -48,22 +62,5 @@ body {
     z-index: 2;
   }
 
-  .button-container {
-    &__btn {
-      background: #30a254;
-
-      &:hover {
-        background: #51e980;
-        box-shadow: 0px 0px 30px #51e980;
-      }
-
-      // background: #e95151;
-
-      // &:hover {
-      //   background: red;
-      //   box-shadow: 0px 0px 30px red;
-      // }
-    }
-  }
 
 }
