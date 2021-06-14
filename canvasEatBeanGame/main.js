@@ -241,7 +241,7 @@ function initialMap() {
 }
 
 function inititalSmile() {
-  smile = new Smile(9, 12, 'left', 0.1);
+  smile = new Smile(9, 12, 'right', 0.1);
   animateSmile();
 }
 
