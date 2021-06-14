@@ -1,15 +1,3 @@
-
-var clockConfig = {
-  target: '#clock',
-  width: 700,
-  height: 700,
-  clockStyle: '#CC887B',
-  clockScaleStyle: '#CC887B',
-  hourHandStyle: '#333333',
-  minuteHandStyle: '#333333',
-  secondHandStyle: 'red'
-}
-
 var Clock = function (clockConfig) {
   this.target = $(clockConfig.target)[0];
   this.ctx = this.target.getContext('2d');
@@ -22,6 +10,7 @@ var Clock = function (clockConfig) {
   this.secondHandStyle = clockConfig.secondHandStyle;
 }
 
+// 畫時鐘
 Clock.prototype.draw = function () {
 
   var ctx = this.ctx;
@@ -147,7 +136,8 @@ Clock.prototype.grid = function () {
   ctx.restore();
 }
 
-Clock.prototype.init = function () {
+// 初始化時鐘
+Clock.prototype.initial = function () {
   var _this = this;
   _this.draw();
   _this.grid();
@@ -160,8 +150,18 @@ Clock.prototype.init = function () {
 
 // 初始化
 function initial() {
+  var clockConfig = {
+    target: '#clock',
+    width: 700,
+    height: 700,
+    clockStyle: '#CC887B',
+    clockScaleStyle: '#CC887B',
+    hourHandStyle: '#333333',
+    minuteHandStyle: '#333333',
+    secondHandStyle: 'red'
+  }
   var clock = new Clock(clockConfig);
-  clock.init();
+  clock.initial();
 }
 
 initial();
