@@ -1,3 +1,4 @@
+// ES5 Class
 var Clock = function (clockConfig) {
   this.target = $(clockConfig.target)[0];
   this.ctx = this.target.getContext('2d');
@@ -28,22 +29,24 @@ Clock.prototype.draw = function () {
   ctx.beginPath();
   ctx.lineWidth = 14;
   ctx.strokeStyle = this.clockStyle;
-  ctx.arc(0, 0, clockRadius, 0, Math.PI * 2, true);
+  ctx.arc(0, 0, clockRadius, 0, Math.PI * 2);
   ctx.stroke();
   ctx.closePath();
 
   // 時針刻度 start
-  var hourRadius = Math.round((this.width * 0.7) / 2) - 20;
+  var hourRadius = clockRadius - 20; // 圓形往內縮 20px 開始畫刻度
   //第二層save
   ctx.save();
   ctx.lineWidth = 5;
   ctx.strokeStyle = this.clockScaleStyle;
+
+  // 畫 12 個刻度
   for (var i = 0; i < 12; i++) {
     ctx.beginPath();
-    ctx.rotate(Math.PI / 6);
     ctx.moveTo(hourRadius, 0);
     ctx.lineTo(hourRadius - 30, 0);
     ctx.stroke();
+    ctx.rotate(2 * Math.PI / 12);
   }
   ctx.restore();
 
@@ -164,4 +167,5 @@ function initial() {
   clock.initial();
 }
 
+// 主程式
 initial();
