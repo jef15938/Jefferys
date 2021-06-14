@@ -90,6 +90,7 @@ function animate() {
 
   ctx.fillStyle = 'white';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
   for (var i = 0; i < particleList.length; i++) {
     particleList[i].update();
     particleList[i].drawCircle();
