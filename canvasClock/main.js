@@ -21,7 +21,7 @@ Clock.prototype.draw = function () {
   ctx.save();
   ctx.clearRect(0, 0, this.width, this.height);
 
-  ctx.translate(this.width / 2, this.height / 2);
+  ctx.translate(this.width / 2, this.height / 2); // 將旋轉中心移動到中心
   ctx.rotate(2 * Math.PI * (-1 / 4)); // 將圓校正, 12 點鐘方向為圓的 0 度
 
   // 畫時鐘外框
@@ -65,7 +65,7 @@ Clock.prototype.draw = function () {
   ctx.rotate((hr * (2 * Math.PI / 12)) + ((2 * Math.PI / 12) / 60 * min) + ((2 * Math.PI / 12) / 60 / 60 * sec));
   ctx.beginPath();
   ctx.moveTo(-10, 0);
-  ctx.lineTo(100, 0);
+  ctx.lineTo(60, 0);
   ctx.stroke();
   ctx.restore();
   // 時針 end
@@ -78,7 +78,7 @@ Clock.prototype.draw = function () {
   ctx.rotate(((2 * Math.PI / 60) * min) + ((2 * Math.PI / 60) / 60 * sec));
   ctx.beginPath();
   ctx.moveTo(-20, 0);
-  ctx.lineTo(180, 0);
+  ctx.lineTo(120, 0);
   ctx.stroke();
   ctx.restore();
   // 分針 end
@@ -91,7 +91,7 @@ Clock.prototype.draw = function () {
   ctx.rotate(2 * Math.PI / 60 * sec);
   ctx.beginPath();
   ctx.moveTo(-30, 0);
-  ctx.lineTo(140, 0);
+  ctx.lineTo(100, 0);
   ctx.stroke();
   ctx.restore();
   // 秒針 end
@@ -143,10 +143,10 @@ Clock.prototype.grid = function () {
 Clock.prototype.initial = function () {
   var _this = this;
   _this.draw();
-  _this.grid();
+  // _this.grid();
   setInterval(function () {
     _this.draw();
-    _this.grid();
+    // _this.grid();
   }, 1000);
 
 }
@@ -155,8 +155,8 @@ Clock.prototype.initial = function () {
 function initial() {
   var clockConfig = {
     target: '#clock',
-    width: 700,
-    height: 700,
+    width: 500,
+    height: 500,
     clockStyle: '#CC887B',
     clockScaleStyle: '#CC887B',
     hourHandStyle: '#333333',
