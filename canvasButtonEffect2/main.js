@@ -55,7 +55,7 @@ Particle.prototype.update = function () {
   }
 }
 
-// 畫圓圈
+// 畫實心圓圈
 Particle.prototype.drawCircle = function () {
   this.context.save();
   this.context.beginPath();
@@ -66,7 +66,7 @@ Particle.prototype.drawCircle = function () {
   this.context.restore();
 }
 
-// 畫正方形
+// 畫邊框正方形
 Particle.prototype.drawRectangle = function () {
   this.context.save();
   this.context.beginPath();
