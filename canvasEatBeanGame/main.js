@@ -1,6 +1,6 @@
 
-var mapWidth = window.innerWidth / 2;
 var mapHeight = window.innerHeight;
+var mapWidth = mapHeight * 19 / 22;
 
 var mapXNumber = 19;
 var mapYNumber = 22;
@@ -16,6 +16,7 @@ mapCanvas.height = mapHeight;
 var mapCoordinateList = [];
 var mapWallCoordinateList = [];
 var mapWallPositionList = [];
+var mapBeanPositionList = [];
 var mapImageDate = null;
 
 var smile;
@@ -31,16 +32,129 @@ var Smile = function (x, y, size, velocity) {
   this.x = x;
   this.y = y;
   this.direction = 'right';
+  this.nextDirection = this.direction;
   this.size = size;
   this.velocity = velocity;
-  this.rightCount = 0;
-  this.leftCount = 0;
-  this.upCount = 0;
-  this.downCount = 0;
+  this.canMoveRange = 0.2;
+  this.isMouseOpen = false;
+  this.toggleMouseCount = 0;
+  this.toggleMouseMax = 8;
+}
+
+Smile.prototype.update = function () {
+
+  var loop = [
+    ['right', 'x', 'plus'],
+    ['left', 'x', 'minus'],
+    ['down', 'y', 'plus'],
+    ['up', 'y', 'minus'],
+  ];
+
+
+
+  loop.forEach(per => {
+    var direction = per[0];
+    var xy = per[1];
+    var calculateSymbol = per[2];
+
+    if (this.nextDirection === direction) {
+      var origin = this[xy];
+      if (calculateSymbol === 'plus') {
+        this[xy] += (this.velocity + this.canMoveRange);
+      }
+      else if (calculateSymbol === 'minus') {
+        this[xy] -= (this.velocity + this.canMoveRange);
+      }
+      var isCollide = judgeSmileIsCollideWall();
+
+      if (isCollide) {
+        this[xy] = origin;
+        this.nextDirection = this.direction;
+      }
+      else {
+        this.direction = this.nextDirection;
+        if (calculateSymbol === 'plus') {
+          this[xy] -= this.canMoveRange;
+        }
+        else if (calculateSymbol === 'minus') {
+          this[xy] += this.canMoveRange;
+        }
+      }
+
+      if (xy === 'x') {
+        if (this.x > mapXNumber) {
+          this.x = 0;
+        }
+
+        if (this.x < 0) {
+          this.x = mapXNumber;
+        }
+      }
+      else if (xy === 'y') {
+        if (this.y > mapYNumber - 1) {
+          this.y = 0;
+        }
+
+        if (this.y < 0) {
+          this.y = mapXYumber - 1;
+        }
+      }
+
+    }
+  });
+
+
+
+
+
+}
+
+Smile.prototype.draw = function () {
+
+  mapCtx.save();
+  mapCtx.fillStyle = 'yellow';
+  var realX = this.x * mapWidthPerX;
+  var realY = this.y * mapWidthPerY;
+  mapCtx.beginPath();
+  mapCtx.moveTo(realX, realY);
+
+  if (this.isMouseOpen) {
+    mapCtx.arc(realX, realY, this.size, 0, Math.PI * 2);
+  }
+  else {
+    var mouseAngle = Math.PI / 5;
+    var quarter = Math.PI / 2;
+
+    if (this.direction === 'right') {
+      mapCtx.arc(realX, realY, this.size, mouseAngle, Math.PI * 2 - mouseAngle);
+    }
+    if (this.direction === 'down') {
+      mapCtx.arc(realX, realY, this.size, mouseAngle + quarter, Math.PI * 2 - mouseAngle + quarter);
+    }
+    if (this.direction === 'left') {
+      mapCtx.arc(realX, realY, this.size, mouseAngle + quarter * 2, Math.PI * 2 - mouseAngle + quarter * 2);
+    }
+    if (this.direction === 'up') {
+      mapCtx.arc(realX, realY, this.size, mouseAngle + quarter * 3, Math.PI * 2 - mouseAngle + quarter * 3);
+    }
+  }
+
+  mapCtx.fill();
+  mapCtx.closePath();
+
+
+  this.toggleMouseCount++;
+  if (this.toggleMouseCount === this.toggleMouseMax) {
+    this.isMouseOpen = !this.isMouseOpen;
+    this.toggleMouseCount = 0;
+  }
+  mapCtx.restore();
+
 }
 
 
-function initialMap() {
+
+function initialMap(isFirstTime) {
 
   if (!mapImageDate) {
 
@@ -244,102 +358,68 @@ function initialMap() {
       mapWallPositionList.push({ x: realX, y: realY, width: mapWidthPerX, height: mapWidthPerY });
     });
 
+    if (isFirstTime) {
+      for (var x = 0; x < mapXNumber; x++) {
+        for (var y = 0; y < mapYNumber; y++) {
+          var findWall = mapWallCoordinateList.find(wall => (wall[0] === x && wall[1] === y));
+          if (!findWall) {
+            var beanRadius = mapWidthPerX / 6;
+            var realX = x * mapWidthPerX + beanRadius * 3;
+            var realY = y * mapWidthPerY + beanRadius * 3;
+            mapBeanPositionList.push({ x: realX, y: realY, width: beanRadius, height: beanRadius })
+          }
+        }
+      }
+    }
+
     mapCtx.save();
     mapCtx.fillStyle = '#61A8B0';
     mapWallPositionList.forEach(wall => {
       mapCtx.fillRect(wall.x, wall.y, wall.width, wall.height);
     });
+    mapCtx.restore();
+
 
 
     mapImageDate = mapCtx.getImageData(0, 0, mapWidth, mapHeight);
+
   }
 
 
   mapCtx.putImageData(mapImageDate, 0, 0);
 
 
+  mapCtx.save();
+
+  mapBeanPositionList.forEach(bean => {
+
+    mapCtx.fillStyle = 'orange';
+    mapCtx.beginPath();
+    var beanRealX = bean.x;
+    var beanRealY = bean.y;
+    mapCtx.arc(beanRealX, beanRealY, bean.width, 0, Math.PI * 2);
+    mapCtx.fill();
+    mapCtx.closePath();
+  });
+  mapCtx.restore();
+
+
+
 }
 
 function inititalSmile() {
-  smile = new Smile(9.5, 12.5, 17, 0.1);
+  smile = new Smile(9.5, 12.5, 15, 0.05);
   animateSmile();
 }
 
 function animateSmile() {
-  var loop = [
-    ['rightCount', 'x', 'plus'],
-    ['leftCount', 'x', 'minus'],
-    ['downCount', 'y', 'plus'],
-    ['upCount', 'y', 'minus'],
-  ]
 
-  loop.forEach(per => {
-    var counutProperty = per[0];
-    var xy = per[1];
-    var calculateSymbol = per[2];
-
-    if (smile[counutProperty] !== 0) {
-      var origin = smile[xy];
-      if (calculateSymbol === 'plus') {
-        smile[xy] += smile[counutProperty] * smile.velocity;
-      }
-      else if (calculateSymbol === 'minus') {
-        smile[xy] -= smile[counutProperty] * smile.velocity;
-      }
-      var isCollide = judgeSmileIsCollideWall();
-      console.log(isCollide);
-      if (isCollide) {
-        smile[xy] = origin;
-      }
-      smile[counutProperty] = 0;
-      if (xy === 'x') {
-        if (smile.x > mapXNumber) {
-          smile.x = 0;
-        }
-
-        if (smile.x < 0) {
-          smile.x = mapXNumber;
-        }
-      }
-      else if (xy === 'y') {
-        if (smile.y > mapYNumber - 1) {
-          smile.y = 0;
-        }
-
-        if (smile.y < 0) {
-          smile.y = mapXYumber - 1;
-        }
-      }
-
-    }
-  });
-
-
-  mapCtx.save();
   initialMap();
-  mapCtx.fillStyle = 'yellow';
-  var realX = smile.x * mapWidthPerX;
-  var realY = smile.y * mapWidthPerY;
-  mapCtx.beginPath();
-  mapCtx.moveTo(realX, realY);
-  var mouseAngle = Math.PI / 5;
-  var quarter = Math.PI / 2;
-  if (smile.direction === 'right') {
-    mapCtx.arc(realX, realY, smile.size, mouseAngle, Math.PI * 2 - mouseAngle);
-  }
-  if (smile.direction === 'down') {
-    mapCtx.arc(realX, realY, smile.size, mouseAngle + quarter, Math.PI * 2 - mouseAngle + quarter);
-  }
-  if (smile.direction === 'left') {
-    mapCtx.arc(realX, realY, smile.size, mouseAngle + quarter * 2, Math.PI * 2 - mouseAngle + quarter * 2);
-  }
-  if (smile.direction === 'up') {
-    mapCtx.arc(realX, realY, smile.size, mouseAngle + quarter * 3, Math.PI * 2 - mouseAngle + quarter * 3);
-  }
 
-  mapCtx.fill();
-  mapCtx.closePath();
-  mapCtx.restore();
+  smile.update(smile.direction);
+  smile.draw();
+  judgeSmileIsCollideBean();
+
 
   window.requestAnimationFrame(animateSmile);
 }
@@ -357,20 +437,20 @@ function bindKeyboardEvent() {
 
     var keyCode = e.key;
     if (keyCode === 'ArrowRight') {
-      smile.direction = 'right';
-      smile.rightCount++;
+      // smile.update('right');
+      smile.nextDirection = 'right';
     }
     else if (keyCode === 'ArrowLeft') {
-      smile.direction = 'left';
-      smile.leftCount++;
+      // smile.update('left');
+      smile.nextDirection = 'left';
     }
     else if (keyCode === 'ArrowDown') {
-      smile.direction = 'down';
-      smile.downCount++;
+      // smile.update('down');
+      smile.nextDirection = 'down';
     }
     else if (keyCode === 'ArrowUp') {
-      smile.direction = 'up';
-      smile.upCount++;
+      // smile.update('up');
+      smile.nextDirection = 'up';
     }
   }, false);
 }
@@ -404,9 +484,40 @@ function didRectCollide(rect1, rect2) {
   return horizontal && vertical;
 }
 
+function judgeSmileIsCollideBean() {
+  var mapBeanPositionListLength = mapBeanPositionList.length;
+  var isCollide = false;
+  var smilePosition = {
+    x: smile.x * mapWidthPerX - smile.size,
+    y: smile.y * mapWidthPerY - smile.size,
+    width: smile.size * 2,
+    height: smile.size * 2
+  }
+  for (var i = 0; i < mapBeanPositionListLength && !isCollide; i++) {
+    var eachBean = mapBeanPositionList[i];
+
+    var result = didRectCollide(smilePosition, eachBean);
+    if (result) {
+      console.log('碰撞痘痘');
+      isCollide = true;
+      mapBeanPositionList = mapBeanPositionList.filter((value, index) => index !== i);
+
+      mapCtx.save();
+      mapCtx.fillStyle = 'black';
+      var realX = eachBean.x * mapWidthPerX;
+      var realY = eachBean.y * mapWidthPerY;
+      mapCtx.fillRect(realX, realY, mapWidthPerX, mapWidthPerY);
+      mapCtx.restore();
+    }
+  }
+
+  return isCollide;
+}
 
 
-initialMap();
+
+
+initialMap(true);
 inititalSmile();
 bindKeyboardEvent();
 
