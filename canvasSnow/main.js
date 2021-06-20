@@ -4,11 +4,18 @@
 // 3. 瀏覽器每次繪製時要 "如何" 操作物件達到想要的效果
 // 4. (如果需要) 到達終點時, 將物件設定為起點狀態
 // 5. (如果需要) 每次繪製時的第一步, "擦掉" 畫布的內容
-// 6. 根據物件狀態, 繪製到 Canvas 上
+// 6. 根據物件狀態, 繪製到 Canvas 上3
+
+
+const FRAMES_PER_SECOND = 60;  // Valid values are 60,30,20,15,10...
+// set the mim time to render the next frame
+const FRAME_MIN_TIME = (1000 / 60) * (60 / FRAMES_PER_SECOND) - (1000 / 60) * 0.5;
+
+var lastFrameTime;
 
 var canvasWidth = window.innerWidth;
 var canvasHeight = window.innerHeight;
-var numberOfSnow = 5000;
+var numberOfSnow = 7000;
 var snowList = [];
 var canvas = $('#canvas')[0];
 var ctx = canvas.getContext('2d');
@@ -89,7 +96,14 @@ function initial() {
 }
 
 // 更新畫面(雪花飄落)
-function animate() {
+function animate(time) {
+
+  if (time - lastFrameTime < FRAME_MIN_TIME) { //skip the frame if the call is too early
+    requestAnimationFrame(animate);
+    return; // return as there is nothing to do
+  }
+  lastFrameTime = time; // remember the time of the rendered frame
+  // render the frame
 
   // 5. (如果需要) 每次繪製時的第一步, "擦掉" 畫布的內容
   // 每次繪製第一步都填入黑色, 長寬為整個 Canvas 的方塊 (擦掉畫布)
