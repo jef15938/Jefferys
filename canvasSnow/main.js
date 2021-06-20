@@ -6,14 +6,15 @@
 // 5. (如果需要) 每次繪製時的第一步, "擦掉" 畫布的內容
 // 6. 根據物件狀態, 繪製到 Canvas 上
 
-var canvasWidth = 1920;
-var canvasHeight = 1080;
+var canvasWidth = window.innerWidth;
+var canvasHeight = window.innerHeight;
 var numberOfSnow = 1000;
 var snowList = [];
 var canvas = $('#canvas')[0];
 var ctx = canvas.getContext('2d');
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
+var myWorker = new Worker("worker.js");;
 
 // 0. 判斷 requestAnimationFrame 支援度
 var requestAnimationFrame = (
@@ -66,6 +67,25 @@ function initial() {
   for (var i = 0; i < numberOfSnow; i++) {
     snowList.push(new Snow());
   }
+
+  if (window.Worker) {
+    // myworker = new Worker("worker.js");
+
+    myWorker.postMessage({ canvasWidth: canvasWidth, canvasHeight: canvasHeight });
+
+    myWorker.postMessage(snowList);
+
+    myWorker.onmessage = function (e) {
+      var resultSnowList = e.data;
+      for (var i = 0; i < numberOfSnow; i++) {
+        var resultSnow = resultSnowList[i];
+        snowList[i].x = resultSnow.x;
+        snowList[i].y = resultSnow.y;
+        snowList[i].size = resultSnow.size;
+      }
+    }
+  }
+
 }
 
 // 更新畫面(雪花飄落)
@@ -78,9 +98,12 @@ function animate() {
 
   // for loop 跑雪花陣列的 update, draw
   for (var i = 0; i < snowList.length; i++) {
-    snowList[i].update();
+    // snowList[i].update();
     snowList[i].draw();
   }
+
+  myWorker.postMessage(snowList);
+
 
   // 瀏覽器準備繪製時, 呼叫自己(更新畫面)
   requestAnimationFrame(animate);
