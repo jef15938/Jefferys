@@ -8,7 +8,7 @@
 
 var canvasWidth = window.innerWidth;
 var canvasHeight = window.innerHeight;
-var numberOfSnow = 1000;
+var numberOfSnow = 5000;
 var snowList = [];
 var canvas = $('#canvas')[0];
 var ctx = canvas.getContext('2d');
@@ -102,7 +102,6 @@ function animate() {
     snowList[i].draw();
   }
 
-  myWorker.postMessage(snowList);
 
 
   // 瀏覽器準備繪製時, 呼叫自己(更新畫面)
