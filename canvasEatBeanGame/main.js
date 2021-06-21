@@ -31,7 +31,7 @@ var Coordinate = function (x, y, fillStyle) {
 var Smile = function (x, y, size, velocity) {
   this.x = x;
   this.y = y;
-  this.direction = 'right';
+  this.direction = '';
   this.nextDirection = this.direction;
   this.size = size;
   this.velocity = velocity;
@@ -118,7 +118,7 @@ Smile.prototype.draw = function () {
   mapCtx.beginPath();
   mapCtx.moveTo(realX, realY);
 
-  if (this.isMouseOpen) {
+  if (this.isMouseOpen || this.direction === '') {
     mapCtx.arc(realX, realY, this.size, 0, Math.PI * 2);
   }
   else {
@@ -151,6 +151,109 @@ Smile.prototype.draw = function () {
   mapCtx.restore();
 
 }
+
+
+
+var Ghost = function (ctx, x, y, direction, footNumber, hasBody, bodyColor) {
+  this.ctx = ctx;
+  this.x = x;
+  this.y = y;
+  this.direction = direction;
+  this.footNumber = footNumber;
+  this.hasBody = hasBody;
+  this.bodyColor = bodyColor;
+}
+
+Ghost.prototype.draw = function () {
+
+  var ctx = this.ctx;
+  var x = this.x;
+  var y = this.y;
+  var direction = this.direction;
+  var footNumber = this.footNumber;
+  var hasBody = this.hasBody;
+  var bodyColor = this.bodyColor;
+
+  if (hasBody === true) {
+    ctx.fillStyle = bodyColor;
+    ctx.beginPath();
+    ctx.moveTo((x - 15), (y + 16));
+    ctx.lineTo((x - 15), (y + 16) - 18);
+    ctx.bezierCurveTo((x - 15), (y + 16) - 26, (x - 15) + 6, (y + 16) - 32, (x - 15) + 14, (y + 16) - 32);
+    ctx.bezierCurveTo((x - 15) + 22, (y + 16) - 32, (x - 15) + 28, (y + 16) - 26, (x - 15) + 28, (y + 16) - 18);
+    ctx.lineTo((x - 15) + 28, (y + 16));
+    if (footNumber < 4) {
+      ctx.lineTo((x - 15) + 23.333, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 18.666, (y + 16));
+      ctx.lineTo((x - 15) + 14, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 9.333, (y + 16));
+      ctx.lineTo((x - 15) + 4.666, (y + 16) - 5.333);
+    } else {
+      ctx.lineTo((x - 15) + 24.333, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 20.666, (y + 16));
+      ctx.lineTo((x - 15) + 17.333, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 12.666, (y + 16));
+      ctx.lineTo((x - 15) + 9, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 5.333, (y + 16));
+      ctx.lineTo((x - 15) + 2.666, (y + 16) - 5.333);
+    }
+    ctx.lineTo((x - 15), (y + 16));
+    ctx.fill();
+  }
+
+  var eyesX = 0;
+  var eyesY = 0;
+
+  if (direction === 'up') {
+    eyesY = -5;
+  } else if (direction === 'right') {
+    eyesX = +2;
+  } else if (direction === 'down') {
+    eyesY = 5;
+  } else if (direction === 'left') {
+    eyesX = -3;
+  }
+
+
+  // 眼珠
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.moveTo((x - 15) + 8 + eyesX, (y + 16) - 24 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 5 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 4 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 4 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 4 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 5 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 8 + eyesX, (y + 16) - 14 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 11 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 12 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 12 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 12 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 11 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 8 + eyesX, (y + 16) - 24 + eyesY);
+
+  ctx.moveTo((x - 15) + 20 + eyesX, (y + 16) - 24 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 17 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 16 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 16 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 16 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 17 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 20 + eyesX, (y + 16) - 14 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 23 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 24 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 24 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 24 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 23 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 20 + eyesX, (y + 16) - 24 + eyesY);
+  ctx.fill();
+
+  if (direction === 'up') {
+    eyesY = -9;
+    eyesX = 2;
+  } else if (direction === 'right') {
+    eyesX = +6;
+  } else if (direction === 'down') {
+    eyesY = +8;
+    eyesX = 2;
+  } else if (direction === 'left') {
+
+  }
+
+  // 眼球
+  ctx.fillStyle = "#0000fa";
+  ctx.beginPath();
+  ctx.arc((x - 15) + 18 + eyesX, (y + 16) - 18 + eyesY, 2, 0, Math.PI * 2, true);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc((x - 15) + 6 + eyesX, (y + 16) - 18 + eyesY, 2, 0, Math.PI * 2, true);
+  ctx.fill();
+}
+
 
 
 
@@ -363,10 +466,18 @@ function initialMap(isFirstTime) {
         for (var y = 0; y < mapYNumber; y++) {
           var findWall = mapWallCoordinateList.find(wall => (wall[0] === x && wall[1] === y));
           if (!findWall) {
-            var beanRadius = mapWidthPerX / 6;
-            var realX = x * mapWidthPerX + beanRadius * 3;
-            var realY = y * mapWidthPerY + beanRadius * 3;
-            mapBeanPositionList.push({ x: realX, y: realY, width: beanRadius, height: beanRadius })
+            //非中間閉合區塊才長豆豆
+            if (!(
+              (y === 10 && x === 8) ||
+              (y === 10 && x === 9) ||
+              (y === 10 && x === 10))
+            ) {
+              var beanRadius = mapWidthPerX / 6;
+              var realX = x * mapWidthPerX + beanRadius * 3;
+              var realY = y * mapWidthPerY + beanRadius * 3;
+              mapBeanPositionList.push({ x: realX, y: realY, width: beanRadius, height: beanRadius })
+            }
+
           }
         }
       }
@@ -420,8 +531,108 @@ function animateSmile() {
   smile.draw();
   judgeSmileIsCollideBean();
 
+  var realX = 9.5 * mapWidthPerX;
+  var realY = 10.5 * mapWidthPerY;
+  // drawHelperGhost(mapCtx, realX, realY, 'up', 1, true);
+
+  // 紅色 #ed1b24
+  // 粉紅色 #feaec9
+  // 水藍色 #4adecb
+  // 橘色 #f99c00
+  var ghost1 = new Ghost(mapCtx, 9.5 * mapWidthPerX, 9.5 * mapWidthPerY, 'up', 1, true, '#ed1b24');
+  ghost1.draw();
+
+  var ghost2 = new Ghost(mapCtx, 8.5 * mapWidthPerX, 10.5 * mapWidthPerY, 'up', 1, true, '#feaec9');
+  ghost2.draw();
+
+  var ghost3 = new Ghost(mapCtx, 9.5 * mapWidthPerX, 10.5 * mapWidthPerY, 'up', 1, true, '#4adecb');
+  ghost3.draw();
+
+  var ghost4 = new Ghost(mapCtx, 10.5 * mapWidthPerX, 10.5 * mapWidthPerY, 'up', 1, true, '#f99c00');
+  ghost4.draw();
+
 
   window.requestAnimationFrame(animateSmile);
+}
+
+function drawHelperGhost(ctx, x, y, direction, footNumber, hasBody) {
+
+  if (hasBody === true) {
+    ctx.beginPath();
+    ctx.moveTo((x - 15), (y + 16));
+    ctx.lineTo((x - 15), (y + 16) - 18);
+    ctx.bezierCurveTo((x - 15), (y + 16) - 26, (x - 15) + 6, (y + 16) - 32, (x - 15) + 14, (y + 16) - 32);
+    ctx.bezierCurveTo((x - 15) + 22, (y + 16) - 32, (x - 15) + 28, (y + 16) - 26, (x - 15) + 28, (y + 16) - 18);
+    ctx.lineTo((x - 15) + 28, (y + 16));
+    if (footNumber < 4) {
+      ctx.lineTo((x - 15) + 23.333, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 18.666, (y + 16));
+      ctx.lineTo((x - 15) + 14, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 9.333, (y + 16));
+      ctx.lineTo((x - 15) + 4.666, (y + 16) - 5.333);
+    } else {
+      ctx.lineTo((x - 15) + 24.333, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 20.666, (y + 16));
+      ctx.lineTo((x - 15) + 17.333, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 12.666, (y + 16));
+      ctx.lineTo((x - 15) + 9, (y + 16) - 5.333);
+      ctx.lineTo((x - 15) + 5.333, (y + 16));
+      ctx.lineTo((x - 15) + 2.666, (y + 16) - 5.333);
+    }
+    ctx.lineTo((x - 15), (y + 16));
+    ctx.fill();
+  }
+
+  var eyesX = 0;
+  var eyesY = 0;
+
+  if (direction === 'up') {
+    eyesY = -5;
+  } else if (direction === 'right') {
+    eyesX = +2;
+  } else if (direction === 'down') {
+    eyesY = 5;
+  } else if (direction === 'left') {
+    eyesX = -3;
+  }
+
+
+  ctx.fillStyle = "white";
+  ctx.beginPath();
+  ctx.moveTo((x - 15) + 8 + eyesX, (y + 16) - 24 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 5 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 4 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 4 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 4 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 5 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 8 + eyesX, (y + 16) - 14 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 11 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 12 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 12 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 12 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 11 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 8 + eyesX, (y + 16) - 24 + eyesY);
+
+  ctx.moveTo((x - 15) + 20 + eyesX, (y + 16) - 24 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 17 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 16 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 16 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 16 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 17 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 20 + eyesX, (y + 16) - 14 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 23 + eyesX, (y + 16) - 14 + eyesY, (x - 15) + 24 + eyesX, (y + 16) - 17 + eyesY, (x - 15) + 24 + eyesX, (y + 16) - 19 + eyesY);
+  ctx.bezierCurveTo((x - 15) + 24 + eyesX, (y + 16) - 21 + eyesY, (x - 15) + 23 + eyesX, (y + 16) - 24 + eyesY, (x - 15) + 20 + eyesX, (y + 16) - 24 + eyesY);
+  ctx.fill();
+
+  if (direction === 'up') {
+    eyesY = -9;
+    eyesX = 2;
+  } else if (direction === 'right') {
+    eyesX = +6;
+  } else if (direction === 'down') {
+    eyesY = +8;
+    eyesX = 2;
+  } else if (direction === 'left') {
+
+  }
+
+  ctx.fillStyle = "#0000fa";
+  ctx.beginPath();
+  ctx.arc((x - 15) + 18 + eyesX, (y + 16) - 18 + eyesY, 2, 0, Math.PI * 2, true);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc((x - 15) + 6 + eyesX, (y + 16) - 18 + eyesY, 2, 0, Math.PI * 2, true);
+  ctx.fill();
+
 }
 
 function initial() {
@@ -454,6 +665,7 @@ function bindKeyboardEvent() {
     }
   }, false);
 }
+
 
 
 function judgeSmileIsCollideWall() {
@@ -499,6 +711,7 @@ function judgeSmileIsCollideBean() {
     var result = didRectCollide(smilePosition, eachBean);
     if (result) {
       console.log('碰撞痘痘');
+      playEatingSound();
       isCollide = true;
       mapBeanPositionList = mapBeanPositionList.filter((value, index) => index !== i);
 
