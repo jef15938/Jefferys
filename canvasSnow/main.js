@@ -95,6 +95,27 @@ function initial() {
 
 }
 
+
+function drawSnowList(snowList) {
+
+  ctx.save();
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+
+  for (var i = 0; i < snowList.length; i++) {
+    var targetSnow = snowList[i];
+    ctx.moveTo(targetSnow.x, targetSnow.y);
+    ctx.arc(targetSnow.x, targetSnow.y, targetSnow.size, 0, Math.PI * 2);
+  }
+
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+
+
+}
+
 // 更新畫面(雪花飄落)
 function animate(time) {
 
@@ -111,16 +132,18 @@ function animate(time) {
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
   // for loop 跑雪花陣列的 update, draw
-  for (var i = 0; i < snowList.length; i++) {
-    // snowList[i].update();
-    snowList[i].draw();
-  }
+  // for (var i = 0; i < snowList.length; i++) {
+  //   // snowList[i].update();
+  //   snowList[i].draw();
+  // }
 
+  drawSnowList(snowList);
 
 
   // 瀏覽器準備繪製時, 呼叫自己(更新畫面)
   requestAnimationFrame(animate);
 }
+
 
 // 主程式
 initial();
