@@ -519,7 +519,7 @@ function initialMap(isFirstTime) {
 }
 
 function inititalSmile() {
-  smile = new Smile(9.5, 12.5, 15, 0.05);
+  smile = new Smile(9.5, 12.5, Math.ceil(mapWidthPerX / 3), 0.05);
   animateSmile();
 }
 
