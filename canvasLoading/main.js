@@ -1,9 +1,21 @@
 var canvasWidth = 500;
 var canvasHeight = 500;
-var canvas = $('#canvas')[0];
+// var canvas = $('#canvas')[0];
+// var ctx = canvas.getContext('2d');
+
+
+var canvas = document.createElement('canvas');
 var ctx = canvas.getContext('2d');
+
+var displayCanvas = $('#canvas')[0];
+var displayCtx = displayCanvas.getContext('2d');
+
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
+
+displayCanvas.width = canvasWidth;
+displayCanvas.height = 192;
+
 
 var requestAnimationFrame = (
   window.requestAnimationFrame ||
@@ -65,6 +77,12 @@ function animate() {
   ctx.fillRect(0, 0, canvasWidth, 159);
   ctx.fillRect(0, 348, canvasWidth, 500);
 
+
+  var imageData = ctx.getImageData(0, 158, canvasWidth, 379);
+  var convertImageDate = convertImageDateWhiteToTransparent(imageData);
+  displayCtx.putImageData(convertImageDate, 0, 0);
+
+
   requestAnimationFrame(animate);
 }
 
@@ -95,3 +113,22 @@ function fetchImage(imageWidth, imageHeight, imageSrc) {
 // 主程式
 initial();
 
+
+function convertImageDateWhiteToTransparent(imageData) {
+  for (let i = 0; i < imageData.data.length; i += 4) {
+    const red = imageData.data[i];
+    const green = imageData.data[i + 1];
+    const blue = imageData.data[i + 2];
+    const isWhite = red === 255 && green === 255 && blue === 255;
+
+    if (isWhite) {
+      // imageData.data[i] = 0;
+      // imageData.data[i + 1] = 0;
+      // imageData.data[i + 2] = 0;
+      imageData.data[i + 3] = 0;
+    }
+
+  }
+  return imageData;
+
+}
