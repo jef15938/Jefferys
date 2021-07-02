@@ -18,6 +18,36 @@ body {
   border-radius: 24px;
   transition: transform .5s ease-out;
 
+  &::before {
+    content: "";
+    position: absolute;
+    width: 110%;
+    height: 110%;
+    background: #aaaaaa;
+    top: -5%;
+    left: 0%;
+    opacity: 0;
+    transform: translateZ(0px);
+    transition: all .5s ease-out;
+    -webkit-filter: blur(20px);
+    -moz-filter: blur(20px);
+    -o-filter: blur(20px);
+    -ms-filter: blur(20px);
+    transform: translateZ(0px);
+    transition: all 0.5s ease-out;
+  }
+
+
+  &:hover {
+    &::before {
+      opacity: 1;
+      transform: translateZ(-100px);
+    }
+  }
+
+
+
+
   &__top {
     position: relative;
     display: flex;
@@ -43,6 +73,7 @@ body {
   .card-02-top {
 
     &__img-list {
+      transform-style: preserve-3d;
       display: flex;
       flex-wrap: wrap;
       margin-right: -12px;
@@ -50,6 +81,7 @@ body {
       transition: transform 0.5s ease-out;
 
       .card-02-top__img-container {
+        position: relative;
         display: inline-block;
         width: 102px;
         height: 102px;
@@ -59,6 +91,32 @@ body {
         >img {
           max-width: 100%;
           max-height: 100%;
+        }
+
+
+        &::before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          background: #556b82;
+          opacity: 0;
+          top: 0;
+          left: 0;
+          transform: translateZ(0px);
+          transition: all .5s ease-out;
+          -webkit-filter: blur(10px);
+          -moz-filter: blur(10px);
+          -o-filter: blur(10px);
+          -ms-filter: blur(10px);
+        }
+
+        &.shadow-active {
+          &::before {
+            opacity: 1;
+            transform: translateZ(-150px);
+          }
         }
 
         &--text {
@@ -83,6 +141,8 @@ body {
 
   .card-02-bottom {
     &__title {
+      transform-style: preserve-3d;
+      position: relative;
       font-style: normal;
       font-weight: 500;
       font-size: 36px;
@@ -90,16 +150,61 @@ body {
       letter-spacing: 0.09px;
       color: #333333;
       transition: transform 0.5s ease-out;
+
+      &::before {
+        content: "NEUX設計小組";
+        font: inherit;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateZ(0px);
+        color: transparent;
+        text-shadow: 0 0 5px #333333;
+        opacity: 0;
+        transition: all .5s ease-out;
+      }
+
+      &.shadow-active {
+        &::before {
+          opacity: 1;
+          transform: translateZ(-100px);
+        }
+      }
+
+
     }
 
     &__description {
+      transform-style: preserve-3d;
+      position: relative;
       font-style: normal;
       font-weight: normal;
       font-size: 30px;
       line-height: 46px;
       letter-spacing: -0.06px;
-      color: #B4B4B4;
+      color: #888888;
       transition: transform 0.5s ease-out;
+
+      &::before {
+        content: "20個專案";
+        font: inherit;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateZ(0px);
+        color: transparent;
+        text-shadow: 0 0 5px #888888;
+        opacity: 0;
+        transition: all .5s ease-out;
+      }
+
+      &.shadow-active {
+        &::before {
+          opacity: 1;
+          transform: translateZ(-100px);
+        }
+      }
+
     }
   }
 
