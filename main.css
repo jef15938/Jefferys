@@ -5,32 +5,23 @@ body {
   overflow-x: hidden;
 }
 
-*[class^="demo"] {
-  margin: 50px 0px 10px 0px;
+.demo-block {
+  margin-top: 50px;
 }
 
-.demo2 > fieldset {
-  height: 50px;
-}
-
-.demo2 > fieldset > legend {
-  text-align: center;
-  padding: 0px 20px;
-}
-
-.canvas-block fieldset {
+.demo-block fieldset {
   position: relative;
   border: 2px solid deeppink;
 }
 
-.canvas-block fieldset > legend {
+.demo-block fieldset > legend {
   padding: 0px 30px;
   color: deeppink;
   font-weight: bold;
   font-size: 30px;
 }
 
-.canvas-block fieldset > legend::before {
+.demo-block fieldset > legend::before {
   content: "";
   position: absolute;
   border: 1rem solid deeppink;
@@ -40,18 +31,54 @@ body {
   left: -2px;
 }
 
-.canvas-block ul {
+.demo-block ul {
   list-style-type: none;
   font-size: 20px;
 }
 
-.canvas-block ul li + li {
+.demo-block ul li + li {
   margin-top: 10px;
 }
 
-.canvas-block ul li:before {
+.demo-block ul li:before {
   content: "⦾ ";
   margin: 0 .5rem 0 0;
   color: deeppink;
+}
+
+.demo-block:first-child fieldset {
+  border-color: deeppink;
+}
+
+.demo-block:first-child fieldset > legend {
+  color: deeppink;
+}
+
+.demo-block:first-child fieldset > legend::before {
+  border-color: deeppink;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+}
+
+.demo-block:first-child ul li:before {
+  color: deeppink;
+}
+
+.demo-block:nth-child(2) fieldset {
+  border-color: blue;
+}
+
+.demo-block:nth-child(2) fieldset > legend {
+  color: blue;
+}
+
+.demo-block:nth-child(2) fieldset > legend::before {
+  border-color: blue;
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+}
+
+.demo-block:nth-child(2) ul li:before {
+  color: blue;
 }
 /*# sourceMappingURL=main.css.map */

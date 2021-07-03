@@ -4,22 +4,11 @@ body {
   overflow-x: hidden;
 }
 
-*[class^="demo"] {
-  margin: 50px 0px 10px 0px;
-}
 
-.demo2 {
-  >fieldset {
-    height: 50px;
+.demo-block {
 
-    >legend {
-      text-align: center;
-      padding: 0px 20px;
-    }
-  }
-}
+  margin-top: 50px;
 
-.canvas-block {
   fieldset {
     position: relative;
     border: 2px solid deeppink;
@@ -58,4 +47,47 @@ body {
     color: deeppink;
 
   }
+
+  &:first-child {
+    fieldset {
+
+      border-color: deeppink;
+
+      >legend {
+        color: deeppink;
+
+        &::before {
+          border-color: deeppink;
+          border-bottom-color: transparent;
+          border-right-color: transparent;
+        }
+      }
+    }
+
+    ul li:before {
+      color: deeppink;
+    }
+  }
+
+  &:nth-child(2) {
+    fieldset {
+
+      border-color: blue;
+
+      >legend {
+        color: blue;
+
+        &::before {
+          border-color: blue;
+          border-bottom-color: transparent;
+          border-right-color: transparent;
+        }
+      }
+    }
+
+    ul li:before {
+      color: blue;
+    }
+  }
+
 }
