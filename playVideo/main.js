@@ -3,7 +3,12 @@ var buttonLeft = Math.ceil(window.innerWidth / 4 * 3 - 150);
 var buttonTop = Math.ceil(window.innerHeight / 10 * 7);
 var isIframeMovie = false;
 
+playButton.css('transition', 'none');
 playButton.css('transform', `translate(${buttonLeft}px, ${buttonTop}px)`);
+setTimeout(function () {
+  playButton.css('transition', 'transform .2s ease-out');
+}, 0);
+
 
 $('.main-block__left').on('mousemove', function (e) {
   if (isIframeMovie) {
@@ -11,9 +16,7 @@ $('.main-block__left').on('mousemove', function (e) {
   }
   var x = e.offsetX;
   var y = e.offsetY;
-
   playButton.css('transform', `translate(${x - 25}px, ${y - 25}px)`);
-
   playButton.addClass('circle-active');
 
 });

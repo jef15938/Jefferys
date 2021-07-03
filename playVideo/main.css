@@ -79,10 +79,6 @@ body a {
   border-radius: 30px;
   -webkit-transform: scale(1);
           transform: scale(1);
-  -webkit-transition: -webkit-transform .3s ease-out;
-  transition: -webkit-transform .3s ease-out;
-  transition: transform .3s ease-out;
-  transition: transform .3s ease-out, -webkit-transform .3s ease-out;
   top: 0;
   left: 0;
 }
