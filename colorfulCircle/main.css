@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+}
+
+.main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main__circle {
+  position: absolute;
+  -webkit-transition: -webkit-transform .25s;
+  transition: -webkit-transform .25s;
+  transition: transform .25s;
+  transition: transform .25s, -webkit-transform .25s;
+  border-radius: 50%;
+}
+
+.main__circle:nth-child(1) {
+  background-color: hotpink;
+}
+
+.main__circle:nth-child(2) {
+  background-color: burlywood;
+}
+
+.main__circle:nth-child(3) {
+  background-color: greenyellow;
+}
+
+.main__circle:nth-child(4) {
+  background-color: lightblue;
+}
+
+.main__circle:nth-child(5) {
+  background-color: orange;
+}
+
+.main__circle:nth-child(6) {
+  background-color: gray;
+}
+
+.main__circle:nth-child(7) {
+  background-color: #ff6f6f;
+}
+/*# sourceMappingURL=main.css.map */
