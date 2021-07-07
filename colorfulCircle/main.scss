@@ -10,7 +10,7 @@ body {
 
   &__circle {
     position: absolute;
-    transition: transform .25s;
+    transition: transform .25s ease-out;
 
     border-radius: 50%;
 
