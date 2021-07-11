@@ -10,6 +10,12 @@ var flowerCtx = flowerdCanvas.getContext('2d');
 flowerdCanvas.width = 300;
 flowerdCanvas.height = 300;
 
+var ring;
+var ringCanvas = $('#ring')[0];
+var ringCtx = ringCanvas.getContext('2d');
+ringCanvas.width = 300;
+ringCanvas.height = 300;
+
 // 0. 判斷 requestAnimationFrame 支援度
 var requestAnimationFrame = (
   window.requestAnimationFrame ||
@@ -213,12 +219,128 @@ Flower.prototype.bloom = function (bloomTimes) {
 }
 
 
+// ring
+var Ring = function (ctx) {
+
+  this.rafId = undefined;
+  this.ctx = ctx;
+  this.centerX = 150;
+  this.centerY = 150;
+  this.strokeWidth = 30;
+  this.radius = 100;
+  this.rotateAngle = 0;
+  this.rotateVelocity = 2;
+  this.isRotateAdding = true;
+  this.sourceVirtualCanvas = this.getSourceVirtualCanvas();
+}
+
+Ring.prototype.clear = function () {
+  this.ctx.clearRect(0, 0, 300, 300);
+}
+
+Ring.prototype.update = function () {
+  if (this.isRotateAdding) {
+    this.rotateAngle += this.rotateVelocity;
+  } else {
+    this.rotateAngle -= this.rotateVelocity;
+  }
+
+  if (this.rotateAngle > this.rotateMaxScale) {
+    this.isRotateAdding = false;
+    return 'ToMax';
+  }
+  if (this.rotateAngle < this.rotateMaxScale) {
+    this.isRotateAdding = true;
+    return 'ToMin';
+  }
+
+  return '';
+
+}
+
+Ring.prototype.getSourceVirtualCanvas = function () {
+  var virtualCanvas = document.createElement('canvas');
+  var virtualCanvasCtx = virtualCanvas.getContext('2d');
+  virtualCanvas.width = 300;
+  virtualCanvas.height = 300;
+  var ctx = virtualCanvasCtx;
+  ctx.save();
+  ctx.beginPath();
+  ctx.strokeStyle = '#00aedc';
+  ctx.lineWidth = this.strokeWidth;
+  ctx.arc(this.centerX, this.centerY, this.radius, 0, Math.PI);
+  ctx.stroke();
+  ctx.closePath();
+
+  ctx.beginPath();
+  ctx.strokeStyle = '#eeeee8';
+  ctx.arc(this.centerX, this.centerY, this.radius, Math.PI, Math.PI * 2);
+  ctx.stroke();
+  ctx.closePath();
+  ctx.restore();
+
+  ctx.beginPath();
+  ctx.fillStyle = '#eeeee8';
+  ctx.arc(this.centerX + this.radius, this.centerY, this.strokeWidth / 2, 0, Math.PI);
+  ctx.fill();
+  ctx.closePath();
+
+  ctx.beginPath();
+  ctx.fillStyle = '#00aedc';
+  ctx.arc(this.centerX - this.radius, this.centerY, this.strokeWidth / 2, 0, Math.PI, true);
+  ctx.fill();
+  ctx.closePath();
+
+  return virtualCanvas;
+}
+
+Ring.prototype.draw = function () {
+  this.ctx.drawImage(this.sourceVirtualCanvas, 0, 0);
+}
+
+Ring.prototype.rotate = function (rotateAngle, countRotateAngle) {
+  if (rotateAngle === 0 || countRotateAngle === 0 || rotateAngle === countRotateAngle) {
+    return;
+  }
+
+  console.log(rotateAngle, countRotateAngle);
+  if (countRotateAngle === undefined) {
+    countRotateAngle = 0;
+  }
+
+  this.ctx.save();
+  var paramater;
+  var translateX = this.centerX;
+  var translateY = this.centerY;
+  this.ctx.translate(translateX, translateY);
+  this.ctx.rotate(Math.PI / 180 * countRotateAngle);
+  this.clear();
+  this.ctx.drawImage(this.sourceVirtualCanvas, -translateX, -translateY);
+
+  this.ctx.restore();
+
+
+  if (rotateAngle > 0) {
+    paramater = countRotateAngle + this.rotateVelocity;
+  }
+  else if (rotateAngle < 0) {
+    paramater = countRotateAngle - this.rotateVelocity;
+  }
+
+  this.rafId = requestAnimationFrame(this.rotate.bind(this, rotateAngle, paramater));
+}
+
+
+
 function initial() {
   fireworks = new Fireworks(fireworksCtx, 12);
   fireworks.drawLine();
 
   flower = new Flower(flowerCtx, 12);
   flower.draw();
+
+  ring = new Ring(ringCtx);
+  ring.draw();
 }
 
 
@@ -228,6 +350,10 @@ function bindMouseEvent() {
   });
   $(flowerdCanvas).on('mouseenter', function () {
     flower.bloom(2);
+  });
+
+  $(ringCanvas).on('mouseenter', function () {
+    ring.rotate(90);
   });
 }
 
