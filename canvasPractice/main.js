@@ -1,3 +1,5 @@
+var colorLightBlue = '#00aedc';
+
 var fireworks;
 var fireworksCanvas = $('#fireworks')[0];
 var fireworksCtx = fireworksCanvas.getContext('2d');
@@ -15,6 +17,12 @@ var ringCanvas = $('#ring')[0];
 var ringCtx = ringCanvas.getContext('2d');
 ringCanvas.width = 300;
 ringCanvas.height = 300;
+
+var donut;
+var donutCanvas = $('#donut')[0];
+var donutCtx = donutCanvas.getContext('2d');
+donutCanvas.width = 300;
+donutCanvas.height = 300;
 
 // 0. 判斷 requestAnimationFrame 支援度
 var requestAnimationFrame = (
@@ -95,17 +103,14 @@ Fireworks.prototype.clear = function () {
 }
 
 Fireworks.prototype.explosion = function (explosionTimes) {
-  if (explosionTimes === 0) {
+  if (explosionTimes === 0 || !explosionTimes) {
     return;
   }
 
   var paramater;
   this.clear();
   var updateRes = this.update();
-  if (explosionTimes === undefined) {
-    paramater = undefined;
-  }
-  else if (explosionTimes && explosionTimes > 0) {
+  if (explosionTimes && explosionTimes > 0) {
     paramater = updateRes === 'ToMin' ? explosionTimes - 1 : explosionTimes;
   }
 
@@ -200,17 +205,14 @@ Flower.prototype.draw = function () {
 }
 
 Flower.prototype.bloom = function (bloomTimes) {
-  if (bloomTimes === 0) {
+  if (bloomTimes === 0 || !bloomTimes) {
     return;
   }
 
   var paramater;
   this.clear();
   var updateRes = this.update();
-  if (bloomTimes === undefined) {
-    paramater = undefined;
-  }
-  else if (bloomTimes && bloomTimes > 0) {
+  if (bloomTimes && bloomTimes > 0) {
     paramater = updateRes === 'ToMin' ? bloomTimes - 1 : bloomTimes;
   }
 
@@ -266,7 +268,7 @@ Ring.prototype.getSourceVirtualCanvas = function () {
   var ctx = virtualCanvasCtx;
   ctx.save();
   ctx.beginPath();
-  ctx.strokeStyle = '#00aedc';
+  ctx.strokeStyle = colorLightBlue;
   ctx.lineWidth = this.strokeWidth;
   ctx.arc(this.centerX, this.centerY, this.radius, 0, Math.PI);
   ctx.stroke();
@@ -286,7 +288,7 @@ Ring.prototype.getSourceVirtualCanvas = function () {
   ctx.closePath();
 
   ctx.beginPath();
-  ctx.fillStyle = '#00aedc';
+  ctx.fillStyle = colorLightBlue;
   ctx.arc(this.centerX - this.radius, this.centerY, this.strokeWidth / 2, 0, Math.PI, true);
   ctx.fill();
   ctx.closePath();
@@ -303,7 +305,6 @@ Ring.prototype.rotate = function (rotateAngle, countRotateAngle) {
     return;
   }
 
-  console.log(rotateAngle, countRotateAngle);
   if (countRotateAngle === undefined) {
     countRotateAngle = 0;
   }
@@ -331,6 +332,92 @@ Ring.prototype.rotate = function (rotateAngle, countRotateAngle) {
 }
 
 
+// donuts
+var Donut = function (ctx) {
+
+  this.rafId = undefined;
+  this.ctx = ctx;
+  this.centerX = 150;
+  this.centerY = 150;
+  this.outerRadius = 150;
+  this.innerRadius = 100;
+  this.innerScale = 1;
+  this.innerMinScale = 0.5;
+  this.innerMaxScale = 1;
+  this.scaleVelocity = 0.008;
+  this.isScaleAdding = true;
+}
+
+Donut.prototype.clear = function () {
+  this.ctx.clearRect(0, 0, 300, 300);
+}
+
+Donut.prototype.update = function () {
+  if (this.isScaleAdding) {
+    this.innerScale += this.scaleVelocity;
+  } else {
+    this.innerScale -= this.scaleVelocity;
+  }
+
+  if (this.innerScale > this.innerMaxScale) {
+    this.isScaleAdding = false;
+    return 'ToMax';
+  }
+  if (this.innerScale < this.innerMinScale) {
+    this.isScaleAdding = true;
+    return 'ToMin';
+  }
+
+  return '';
+
+}
+
+Donut.prototype.draw = function () {
+  var ctx = this.ctx;
+  ctx.save();
+
+  // 畫 outer
+  ctx.fillStyle = colorLightBlue;
+  ctx.beginPath();
+  ctx.arc(this.centerX, this.centerY, this.outerRadius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.closePath();
+
+  // 處理 scale
+  var translateX = this.centerX;
+  var translateY = this.centerY;
+  ctx.translate(translateX, translateY);
+  ctx.scale(this.innerScale, this.innerScale);
+
+  // 畫 inner
+  ctx.fillStyle = 'white';
+  ctx.beginPath();
+  ctx.arc(this.centerX - translateX, this.centerY - translateY, this.innerRadius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.closePath();
+
+  ctx.restore();
+}
+
+Donut.prototype.scaleCenter = function (scaleTimes, calculateMode) {
+  if (scaleTimes === 0) {
+    return;
+  }
+
+  var paramater;
+  this.clear();
+  var updateRes = this.update();
+  if (scaleTimes === undefined) {
+    paramater = undefined;
+  }
+  else if (scaleTimes && scaleTimes > 0) {
+    paramater = updateRes === calculateMode ? scaleTimes - 1 : scaleTimes;
+  }
+
+  this.draw();
+  this.rafId = requestAnimationFrame(this.scaleCenter.bind(this, paramater, calculateMode));
+}
+
 
 function initial() {
   fireworks = new Fireworks(fireworksCtx, 12);
@@ -341,6 +428,9 @@ function initial() {
 
   ring = new Ring(ringCtx);
   ring.draw();
+
+  donut = new Donut(donutCtx);
+  donut.draw();
 }
 
 
@@ -348,12 +438,21 @@ function bindMouseEvent() {
   $(fireworksCanvas).on('mouseenter', function () {
     fireworks.explosion(2);
   });
+
   $(flowerdCanvas).on('mouseenter', function () {
     flower.bloom(2);
   });
 
   $(ringCanvas).on('mouseenter', function () {
     ring.rotate(90);
+  });
+
+  $(donutCanvas).on('mouseenter', function () {
+    donut.scaleCenter(1, 'ToMin');
+  });
+
+  $(donutCanvas).on('mouseleave', function () {
+    donut.scaleCenter(1, 'ToMax');
   });
 }
 
