@@ -4,24 +4,28 @@ var fireworks02Canvas = $('#fireworks02')[0];
 var fireworks02Ctx = fireworks02Canvas.getContext('2d');
 fireworks02Canvas.width = 300;
 fireworks02Canvas.height = 300;
+fireworks02Ctx.imageSmoothingEnabled = true;
 
 var colorfulBall;
 var colorfulBallCanvas = $('#colorfulBall')[0];
 var colorfulBallCtx = colorfulBallCanvas.getContext('2d');
 colorfulBallCanvas.width = 300;
 colorfulBallCanvas.height = 300;
+colorfulBallCtx.imageSmoothingEnabled = true;
 
 var palette;
 var paletteCanvas = $('#palette')[0];
 var paletteCtx = paletteCanvas.getContext('2d');
 paletteCanvas.width = 300;
 paletteCanvas.height = 300;
+paletteCtx.imageSmoothingEnabled = true;
 
 var donut;
 var donutCanvas = $('#donut')[0];
 var donutCtx = donutCanvas.getContext('2d');
 donutCanvas.width = 300;
 donutCanvas.height = 300;
+donutCtx.imageSmoothingEnabled = true;
 
 
 
@@ -39,6 +43,10 @@ var requestAnimationFrame = (
 
 function convertToPI(degree) {
   return degree * Math.PI / 180;
+}
+
+function randomColor() {
+  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
 
 // fireworks
@@ -139,47 +147,70 @@ Fireworks.prototype.stopAnimation = function () {
   }
 }
 
-
-// ColorfulBall
-var ColorfulBall = function (ctx, ballNumbers, ballColor = '') {
+// ColorfulBallItem
+var ColorfulBallItem = function (ctx, radius, color = '#111', center) {
 
   this.rafId = undefined;
   this.ctx = ctx;
-  this.ballNumbers = ballNumbers;
+  this.centerX = center.x;
+  this.centerY = center.y;
+  this.radius = radius;
+  this.color = color;
+}
+
+ColorfulBallItem.prototype.draw = function (isColorRandom) {
+  var color = isColorRandom ? randomColor() : this.color;
+  var ctx = this.ctx;
+  ctx.save();
+  ctx.beginPath();
+  ctx.fillStyle = color;
+  ctx.arc(this.centerX, this.centerY, this.radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.closePath();
+  ctx.restore();
+}
+
+// ColorfulBall
+var ColorfulBall = function (ctx, ballNumbers) {
+
+  this.rafId = undefined;
+  this.ctx = ctx;
   this.centerX = 150;
   this.centerY = 150;
-  this.outerRadius = 140;
-  this.ballRadius = 10;
-  this.isBallColorRandom = ballColor === '';
-  this.ballColor = ballColor;
+  this.radius = 140;
+  this.ballNumbers = ballNumbers;
+  this.itemList = this.initItemList(this.ballNumbers);
+  this.changeTimeUnit = 100;
+
+}
+
+ColorfulBall.prototype.initItemList = function (ballNumbers) {
+  var itemList = [];
+  var unitDegree = 360 / ballNumbers;
+  for (let degree = 0; degree < 360; degree += unitDegree) {
+
+    const startOffsetX = this.radius * Math.cos((Math.PI / 180) * degree);
+    const startOffsetY = this.radius * Math.sin((Math.PI / 180) * degree);
+
+    const element = new ColorfulBallItem(
+      this.ctx,
+      10,
+      '#ddd',
+      {
+        x: startOffsetX + this.centerX,
+        y: startOffsetY + this.centerY
+      }
+    );
+    itemList.push(element);
+  }
+  return itemList;
 }
 
 ColorfulBall.prototype.draw = function () {
-  var ctx = this.ctx;
 
-  ctx.translate(this.centerX, this.centerY);
-  ctx.save();
-  ctx.strokeStyle = '#eeeee8';
-  ctx.beginPath();
-
-  var unitDegree = 360 / this.ballNumbers;
-
-  for (i = 0; i < 360; i += unitDegree) {
-
-    const offsetX = (this.outerRadius - this.ballRadius) * Math.cos(convertToPI(i));
-    const offsetY = (this.outerRadius - this.ballRadius) * Math.sin(convertToPI(i));
-
-    ctx.beginPath();
-    ctx.save();
-    ctx.fillStyle = '#eeeee8';
-    ctx.arc(offsetX, offsetY, this.ballRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-    ctx.closePath();
-
+  for (i = 0; i < this.itemList.length; i++) {
+    this.itemList[i].draw();
   }
-
-  ctx.restore();
 }
 
 ColorfulBall.prototype.clear = function () {
@@ -200,9 +231,34 @@ ColorfulBall.prototype.changeColor = function (i, color) {
   ctx.restore();
   ctx.closePath();
 
-
   this.draw();
-  this.rafId = requestAnimationFrame(this.explosion.bind(this, paramater));
+  // this.rafId = requestAnimationFrame(this.explosion.bind(this, paramater));
+}
+
+ColorfulBall.prototype.updateAndDraw = function (time, isRandomColor) {
+
+  if (this.changeColorIndex === this.itemList.length) {
+    this.changeColorIndex = 0;
+    return;
+  }
+
+  var currentTime = new Date().getTime();
+  if (time) {
+    const timeGap = currentTime - this.startTime;
+    if (timeGap >= this.changeTimeUnit) {
+      this.startTime = currentTime;
+      // this.itemList[this.changeColorIndex].color = 'red';
+      this.itemList[this.changeColorIndex].draw(isRandomColor);
+      this.changeColorIndex++;
+    }
+  }
+  else {
+    this.startTime = currentTime;
+    this.changeColorIndex = 0;
+  }
+
+
+  this.rafId = requestAnimationFrame(this.updateAndDraw.bind(this, this.startTime, isRandomColor));
 }
 
 ColorfulBall.prototype.stopAnimation = function () {
@@ -324,21 +380,24 @@ var Donut = function (ctx) {
 
 Donut.prototype.draw = function () {
   var ctx = this.ctx;
+  ctx.save();
   ctx.beginPath();
   ctx.fillStyle = '#00aedc';
-  ctx.translate(this.centerX, this.centerY);
+  // ctx.translate(this.centerX, this.centerY);
 
-  ctx.arc(0, 0, this.outerRadius, 0, Math.PI * 2);
+  ctx.arc(150, 150, this.outerRadius, 0, Math.PI * 2);
   ctx.fill();
+  ctx.closePath();
 
   ctx.beginPath();
-  ctx.save();
+
   ctx.fillStyle = 'white';
-  ctx.arc(0, 0, this.innerRadius, 0, Math.PI * 2);
+  ctx.arc(150, 150, this.innerRadius, 0, Math.PI * 2);
   ctx.fill();
+  ctx.closePath();
   ctx.restore();
 
-  ctx.translate(-this.centerX, -this.centerY);
+  // ctx.translate(-this.centerX, -this.centerY);
 }
 
 Donut.prototype.clear = function () {
@@ -377,8 +436,8 @@ function initial() {
   fireworks02 = new Fireworks(fireworks02Ctx, 16);
   fireworks02.drawLine();
 
-  // colorfulBall = new ColorfulBall(colorfulBallCtx, 16);
-  // colorfulBall.draw();
+  colorfulBall = new ColorfulBall(colorfulBallCtx, 16);
+  colorfulBall.draw();
 
   palette = new Palette(paletteCtx, ['red', 'blue', 'yellow', 'green', 'pink'], 100);
   palette.draw();
@@ -414,15 +473,12 @@ function bindMouseEvent() {
     donut.update(false);
   });
 
-  // $(colorfulBallCanvas).on('mouseenter', function () {
-  //   console.log('1111111');
-  //   var unitDegree = 360 / this.ballNumbers;
+  $(colorfulBallCanvas).on('mouseenter', function () {
+    colorfulBall.updateAndDraw(new Date().getTime(), true);
+  });
 
-  //   for (i = 0; i < 360; i += unitDegree) {
-  //     // setTimeout(() => {
-  //     colorfulBall.changeColor(i, '#000');
-  //     // }, 300);
-  //   }
+  // $(colorfulBallCanvas).on('mouseleave', function () {
+  //   colorfulBall.updateAndDraw(new Date().getTime(), false);
   // });
 }
 
