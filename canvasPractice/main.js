@@ -333,90 +333,90 @@ Ring.prototype.rotate = function (rotateAngle, countRotateAngle) {
 
 
 // donuts
-var Donut = function (ctx) {
+// var Donut = function (ctx) {
 
-  this.rafId = undefined;
-  this.ctx = ctx;
-  this.centerX = 150;
-  this.centerY = 150;
-  this.outerRadius = 150;
-  this.innerRadius = 100;
-  this.innerScale = 1;
-  this.innerMinScale = 0.5;
-  this.innerMaxScale = 1;
-  this.scaleVelocity = 0.008;
-  this.isScaleAdding = true;
-}
+//   this.rafId = undefined;
+//   this.ctx = ctx;
+//   this.centerX = 150;
+//   this.centerY = 150;
+//   this.outerRadius = 150;
+//   this.innerRadius = 100;
+//   this.innerScale = 1;
+//   this.innerMinScale = 0.5;
+//   this.innerMaxScale = 1;
+//   this.scaleVelocity = 0.008;
+//   this.isScaleAdding = true;
+// }
 
-Donut.prototype.clear = function () {
-  this.ctx.clearRect(0, 0, 300, 300);
-}
+// Donut.prototype.clear = function () {
+//   this.ctx.clearRect(0, 0, 300, 300);
+// }
 
-Donut.prototype.update = function () {
-  if (this.isScaleAdding) {
-    this.innerScale += this.scaleVelocity;
-  } else {
-    this.innerScale -= this.scaleVelocity;
-  }
+// Donut.prototype.update = function () {
+//   if (this.isScaleAdding) {
+//     this.innerScale += this.scaleVelocity;
+//   } else {
+//     this.innerScale -= this.scaleVelocity;
+//   }
 
-  if (this.innerScale > this.innerMaxScale) {
-    this.isScaleAdding = false;
-    return 'ToMax';
-  }
-  if (this.innerScale < this.innerMinScale) {
-    this.isScaleAdding = true;
-    return 'ToMin';
-  }
+//   if (this.innerScale > this.innerMaxScale) {
+//     this.isScaleAdding = false;
+//     return 'ToMax';
+//   }
+//   if (this.innerScale < this.innerMinScale) {
+//     this.isScaleAdding = true;
+//     return 'ToMin';
+//   }
 
-  return '';
+//   return '';
 
-}
+// }
 
-Donut.prototype.draw = function () {
-  var ctx = this.ctx;
-  ctx.save();
+// Donut.prototype.draw = function () {
+//   var ctx = this.ctx;
+//   ctx.save();
 
-  // 畫 outer
-  ctx.fillStyle = colorLightBlue;
-  ctx.beginPath();
-  ctx.arc(this.centerX, this.centerY, this.outerRadius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.closePath();
+//   // 畫 outer
+//   ctx.fillStyle = colorLightBlue;
+//   ctx.beginPath();
+//   ctx.arc(this.centerX, this.centerY, this.outerRadius, 0, Math.PI * 2);
+//   ctx.fill();
+//   ctx.closePath();
 
-  // 處理 scale
-  var translateX = this.centerX;
-  var translateY = this.centerY;
-  ctx.translate(translateX, translateY);
-  ctx.scale(this.innerScale, this.innerScale);
+//   // 處理 scale
+//   var translateX = this.centerX;
+//   var translateY = this.centerY;
+//   ctx.translate(translateX, translateY);
+//   ctx.scale(this.innerScale, this.innerScale);
 
-  // 畫 inner
-  ctx.fillStyle = 'white';
-  ctx.beginPath();
-  ctx.arc(this.centerX - translateX, this.centerY - translateY, this.innerRadius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.closePath();
+//   // 畫 inner
+//   ctx.fillStyle = 'white';
+//   ctx.beginPath();
+//   ctx.arc(this.centerX - translateX, this.centerY - translateY, this.innerRadius, 0, Math.PI * 2);
+//   ctx.fill();
+//   ctx.closePath();
 
-  ctx.restore();
-}
+//   ctx.restore();
+// }
 
-Donut.prototype.scaleCenter = function (scaleTimes, calculateMode) {
-  if (scaleTimes === 0) {
-    return;
-  }
+// Donut.prototype.scaleCenter = function (scaleTimes, calculateMode) {
+//   if (scaleTimes === 0) {
+//     return;
+//   }
 
-  var paramater;
-  this.clear();
-  var updateRes = this.update();
-  if (scaleTimes === undefined) {
-    paramater = undefined;
-  }
-  else if (scaleTimes && scaleTimes > 0) {
-    paramater = updateRes === calculateMode ? scaleTimes - 1 : scaleTimes;
-  }
+//   var paramater;
+//   this.clear();
+//   var updateRes = this.update();
+//   if (scaleTimes === undefined) {
+//     paramater = undefined;
+//   }
+//   else if (scaleTimes && scaleTimes > 0) {
+//     paramater = updateRes === calculateMode ? scaleTimes - 1 : scaleTimes;
+//   }
 
-  this.draw();
-  this.rafId = requestAnimationFrame(this.scaleCenter.bind(this, paramater, calculateMode));
-}
+//   this.draw();
+//   this.rafId = requestAnimationFrame(this.scaleCenter.bind(this, paramater, calculateMode));
+// }
 
 
 function initial() {
@@ -429,8 +429,8 @@ function initial() {
   ring = new Ring(ringCtx);
   ring.draw();
 
-  donut = new Donut(donutCtx);
-  donut.draw();
+  // donut = new Donut(donutCtx);
+  // donut.draw();
 }
 
 
@@ -447,13 +447,13 @@ function bindMouseEvent() {
     ring.rotate(90);
   });
 
-  $(donutCanvas).on('mouseenter', function () {
-    donut.scaleCenter(1, 'ToMin');
-  });
+  // $(donutCanvas).on('mouseenter', function () {
+  //   donut.scaleCenter(1, 'ToMin');
+  // });
 
-  $(donutCanvas).on('mouseleave', function () {
-    donut.scaleCenter(1, 'ToMax');
-  });
+  // $(donutCanvas).on('mouseleave', function () {
+  //   donut.scaleCenter(1, 'ToMax');
+  // });
 }
 
 

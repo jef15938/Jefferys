@@ -1,10 +1,13 @@
 body {
   margin: 0;
   overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
 }
 
+
 canvas {
-  position: absolute;
+  /* position: absolute; */
 }
 
 #fireworks {
@@ -22,8 +25,23 @@ canvas {
   left: 600px;
 }
 
+#fireworks02 {
+  top: 420px;
+  left: 50px;
+}
+
+#colorfulBall {
+  top: 420px;
+  left: 300px;
+}
+
+#palette {
+  top: 420px;
+  left: 600px;
+}
+
 #donut {
-  top: 20px;
-  left: 900px;
+  top: 720px;
+  left: 600px;
 }
 /*# sourceMappingURL=main.css.map */
