@@ -226,10 +226,33 @@ var Palette = function (ctx, colorCollection, radius) {
   this.sourceVirtualCanvas = this.getSourceVirtualCanvas();
   this.stageAngle = 0;
   this.rotateAngle = 90;
+  this.originDegree = 45;
 }
 
 Palette.prototype.draw = function () {
-  this.ctx.drawImage(this.sourceVirtualCanvas, 0, 0);
+  // this.ctx.drawImage(this.sourceVirtualCanvas, 0, 0);
+  var ctx = this.ctx;
+
+  ctx.save();
+  ctx.translate(this.centerX, this.centerY);
+
+  var unitDegree = 360 / this.colorCollection.length;
+  // console.log('unitDegree', unitDegree);
+
+  for (i = 0; i < this.colorCollection.length; i++) {
+    ctx.beginPath();
+    ctx.save();
+    ctx.fillStyle = this.colorCollection[i];
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, this.radius, convertToPI(i * unitDegree + this.originDegree), convertToPI((i + 1) * unitDegree + this.originDegree));
+    ctx.fill();
+    ctx.restore();
+    ctx.closePath();
+
+  }
+
+  ctx.restore();
+
 }
 
 Palette.prototype.getSourceVirtualCanvas = function () {
@@ -275,35 +298,13 @@ Palette.prototype.stopAnimation = function () {
 
 Palette.prototype.rotate = function () {
   // console.log('into rotate', this.rotateAngle, this.stageAngle);
-
-  if (this.rotateAngle === 0 || Math.abs(this.rotateAngle) < Math.abs(this.stageAngle)) {
+  if (this.originDegree >= 135) {
     return;
   }
 
-  // console.log(this.rotateAngle, this.stageAngle);
-  if (this.stageAngle === undefined) {
-    this.stageAngle = 0;
-  }
+  this.originDegree += this.rotateVelocity;
 
-  this.ctx.save();
-  var paramater;
-  var translateX = this.centerX;
-  var translateY = this.centerY;
-  this.ctx.translate(translateX, translateY);
-  this.ctx.rotate(Math.PI / 180 * this.stageAngle);
-  this.clear();
-  this.ctx.drawImage(this.sourceVirtualCanvas, -translateX, -translateY);
-
-  this.ctx.restore();
-
-
-  if (this.rotateAngle > 0) {
-    paramater = this.stageAngle + this.rotateVelocity;
-  }
-  else if (this.rotateAngle < 0) {
-    paramater = this.stageAngle - this.rotateVelocity;
-  }
-  this.stageAngle = paramater;
+  this.draw();
 
   this.rafId = requestAnimationFrame(this.rotate.bind(this));
 }
@@ -379,7 +380,7 @@ function initial() {
   // colorfulBall = new ColorfulBall(colorfulBallCtx, 16);
   // colorfulBall.draw();
 
-  palette = new Palette(paletteCtx, ['red', 'blue', 'yellow', 'green'], 100);
+  palette = new Palette(paletteCtx, ['red', 'blue', 'yellow', 'green', 'pink'], 100);
   palette.draw();
 
   donut = new Donut(donutCtx);
@@ -393,18 +394,19 @@ function bindMouseEvent() {
   });
 
   $(paletteCanvas).on('mouseenter', function () {
-    palette.clear();
-    palette.draw();
-    palette.stageAngle = 0;
-    palette.rotateAngle = 90;
+    // palette.clear();
+    // palette.draw();
+    // palette.stageAngle = 0;
+    // palette.rotateAngle = 90;
+    palette.originDegree = 45;
     palette.rotate();
   });
-  setTimeout(() => {
-    setInterval(() => {
-      palette.rotateAngle += 90;
-      palette.rotate();
-    }, 3000);
-  }, 2000);
+  // setTimeout(() => {
+  //   setInterval(() => {
+  //     // palette.rotateAngle += 90;
+  //     palette.rotate();
+  //   }, 3000);
+  // }, 2000);
 
 
   $(donutCanvas).on('mouseenter', function () {
