@@ -1,28 +1,45 @@
 var colorLightBlue = '#00aedc';
+var colorGray = '#eeeee8';
 
 var fireworks;
 var fireworksCanvas = $('#fireworks')[0];
 var fireworksCtx = fireworksCanvas.getContext('2d');
 fireworksCanvas.width = 300;
 fireworksCanvas.height = 300;
+$(fireworksCanvas).width(300);
+$(fireworksCanvas).height(300);
 
 var flower;
 var flowerdCanvas = $('#flower')[0];
 var flowerCtx = flowerdCanvas.getContext('2d');
 flowerdCanvas.width = 300;
 flowerdCanvas.height = 300;
+$(flowerdCanvas).width(300);
+$(flowerdCanvas).height(300);
 
 var ring;
 var ringCanvas = $('#ring')[0];
 var ringCtx = ringCanvas.getContext('2d');
 ringCanvas.width = 300;
 ringCanvas.height = 300;
+$(ringCanvas).width(300);
+$(ringCanvas).height(300);
 
 var donut;
 var donutCanvas = $('#donut')[0];
 var donutCtx = donutCanvas.getContext('2d');
 donutCanvas.width = 300;
 donutCanvas.height = 300;
+$(donutCanvas).width(300);
+$(donutCanvas).height(300);
+
+var circleGroup;
+var circleGroupCanvas = $('#circleGroup')[0];
+var circleGroupCtx = circleGroupCanvas.getContext('2d');
+circleGroupCanvas.width = 650;
+circleGroupCanvas.height = 650;
+$(circleGroupCanvas).width(650);
+$(circleGroupCanvas).height(650);
 
 // 0. 判斷 requestAnimationFrame 支援度
 var requestAnimationFrame = (
@@ -55,7 +72,7 @@ Fireworks.prototype.drawLine = function () {
   var ctx = this.ctx;
 
   ctx.save();
-  ctx.strokeStyle = '#eeeee8';
+  ctx.strokeStyle = colorGray;
   ctx.lineCap = "round";
   ctx.beginPath();
 
@@ -275,14 +292,14 @@ Ring.prototype.getSourceVirtualCanvas = function () {
   ctx.closePath();
 
   ctx.beginPath();
-  ctx.strokeStyle = '#eeeee8';
+  ctx.strokeStyle = colorGray;
   ctx.arc(this.centerX, this.centerY, this.radius, Math.PI, Math.PI * 2);
   ctx.stroke();
   ctx.closePath();
   ctx.restore();
 
   ctx.beginPath();
-  ctx.fillStyle = '#eeeee8';
+  ctx.fillStyle = colorGray;
   ctx.arc(this.centerX + this.radius, this.centerY, this.strokeWidth / 2, 0, Math.PI);
   ctx.fill();
   ctx.closePath();
@@ -329,6 +346,172 @@ Ring.prototype.rotate = function (rotateAngle, countRotateAngle) {
   }
 
   this.rafId = requestAnimationFrame(this.rotate.bind(this, rotateAngle, paramater));
+}
+
+
+// StrokeCircle
+var StrokeCircle = function (ctx, centerX, centetY, radius, lineWidth) {
+
+  this.rafId = undefined;
+  this.ctx = ctx;
+  this.centerX = centerX;
+  this.centerY = centetY;
+  this.radius = radius;
+  this.lineWidth = lineWidth;
+
+  this.globalAlpha = 0;
+  this.minGlobalAlpha = 0;
+  this.maxGlobalAlpha = 1;
+  this.globalAlphaVelocity = 0.05;
+  this.isGlobalAlphaAdding = true;
+}
+
+StrokeCircle.prototype.clear = function () {
+  // this.ctx.clearRect(0, 0, this.radius * 2, this.radius * 2);
+}
+
+StrokeCircle.prototype.update = function () {
+  if (this.isGlobalAlphaAdding) {
+    this.globalAlpha += this.globalAlphaVelocity;
+    this.globalAlpha = Math.min(this.globalAlpha, this.maxGlobalAlpha);
+    if (this.globalAlpha >= this.maxGlobalAlpha) {
+      this.isGlobalAlphaAdding = false;
+      return 'ToMax';
+    }
+
+  } else {
+    this.globalAlpha -= this.globalAlphaVelocity;
+    this.globalAlpha = Math.max(this.globalAlpha, this.minGlobalAlpha);
+    if (this.globalAlpha <= this.minGlobalAlpha) {
+      this.isGlobalAlphaAdding = true;
+      return 'ToMin';
+    }
+  }
+
+  return '';
+
+}
+
+StrokeCircle.prototype.draw = function (strokeColor, isUseGlobalAlpha) {
+  var ctx = this.ctx;
+  ctx.save();
+
+  if (isUseGlobalAlpha) {
+    ctx.globalAlpha = this.globalAlpha;
+  }
+  ctx.strokeStyle = strokeColor;
+  ctx.lineWidth = this.lineWidth;
+  ctx.beginPath();
+  ctx.arc(this.centerX, this.centerY, this.radius, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.closePath();
+
+  ctx.restore();
+}
+
+StrokeCircle.prototype.fillColor = function (strokeColor, isResetGlobalAlpha) {
+  if (isResetGlobalAlpha) {
+    this.globalAlpha = 0;
+  }
+  this.isGlobalAlphaAdding = true;
+
+  this.clear();
+  var updateRed = this.update();
+  this.draw(strokeColor, true);
+
+  if (updateRed === 'ToMax') {
+    return;
+  }
+
+  this.rafId = requestAnimationFrame(this.fillColor.bind(this, strokeColor, false));
+}
+
+
+// CircleGroup
+var CircleGroup = function (ctx, centerX, centerY, minRadius, maxRadius, lineNumber) {
+
+  this.rafId = undefined;
+  this.ctx = ctx;
+  this.centerX = centerX;
+  this.centerY = centerY;
+  this.minRadius = minRadius;
+  this.maxRadius = maxRadius;
+  this.lineNumber = lineNumber;
+  this.changeLineColorIndex = 0;
+  this.changeLineColorUnit = 30;
+  this.backGroundStrokeCircleList = this.getStrokeCircleList();
+  this.strokeCircleList = this.getStrokeCircleList();
+}
+
+CircleGroup.prototype.getStrokeCircleList = function () {
+  var circleList = [];
+  var totalGapNumber = this.lineNumber * 2 - 1;
+  console.log('totalGapNumber: ', totalGapNumber);
+  var lineRadiusGap = Math.ceil((this.maxRadius - this.minRadius) / totalGapNumber);
+  console.log('lineRadiusGap: ', lineRadiusGap);
+  // 11
+  for (var i = 0; i < this.lineNumber; i++) {
+    let circle = new StrokeCircle(circleGroupCtx, this.centerX, this.centerY, this.minRadius + (i * 2 * lineRadiusGap), lineRadiusGap);
+    circleList.push(circle);
+  }
+
+  return circleList;
+}
+
+
+CircleGroup.prototype.clear = function () {
+  this.ctx.clearRect(0, 0, this.maxRadius * 2, this.maxRadius * 2);
+}
+
+CircleGroup.prototype.update = function () {
+  // if (this.isScaleAdding) {
+  //   this.flowerScale += this.scaleVelocity;
+  // } else {
+  //   this.flowerScale -= this.scaleVelocity;
+  // }
+
+  // if (this.flowerScale > this.flowerMaxScale) {
+  //   this.isScaleAdding = false;
+  //   return 'ToMax';
+  // }
+  // if (this.flowerScale < this.flowerMinScale) {
+  //   this.isScaleAdding = true;
+  //   return 'ToMin';
+  // }
+
+  // return '';
+
+}
+
+CircleGroup.prototype.drawBackground = function () {
+  for (var i = 0; i < this.backGroundStrokeCircleList.length; i++) {
+    this.backGroundStrokeCircleList[i].draw(colorGray);
+  }
+}
+
+
+CircleGroup.prototype.fillCircleGroup = function (time, fillColor) {
+
+  if (this.changeLineColorIndex === this.strokeCircleList.length) {
+    this.changeLineColorIndex = 0;
+    return;
+  }
+
+  var currentTime = new Date().getTime();
+  if (time) {
+    const timeGap = currentTime - this.startTime;
+    if (timeGap >= this.changeLineColorUnit) {
+      this.startTime = currentTime;
+      this.strokeCircleList[this.changeLineColorIndex].fillColor(fillColor, true);
+      this.changeLineColorIndex++;
+    }
+  }
+  else {
+    this.startTime = currentTime;
+    this.changeLineColorIndex = 0;
+  }
+
+  this.rafId = requestAnimationFrame(this.fillCircleGroup.bind(this, this.startTime, fillColor));
 }
 
 
@@ -431,6 +614,9 @@ function initial() {
 
   // donut = new Donut(donutCtx);
   // donut.draw();
+
+  circleGroup = new CircleGroup(circleGroupCtx, 325, 325, 30, 300, 11);
+  circleGroup.drawBackground();
 }
 
 
@@ -445,6 +631,14 @@ function bindMouseEvent() {
 
   $(ringCanvas).on('mouseenter', function () {
     ring.rotate(90);
+  });
+
+  $(circleGroupCanvas).on('mouseenter', function () {
+    circleGroup.fillCircleGroup(new Date().getTime(), colorLightBlue);
+  });
+
+  $(circleGroupCanvas).on('mouseleave', function () {
+    circleGroup.fillCircleGroup(new Date().getTime(), colorGray);
   });
 
   // $(donutCanvas).on('mouseenter', function () {

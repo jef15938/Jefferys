@@ -1,11 +1,12 @@
 body {
   margin: 0;
-  overflow: hidden;
+  // overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 canvas {
-  position: absolute;
-
+  flex-shrink: 0;
 }
 
 #fireworks {
@@ -26,4 +27,29 @@ canvas {
 #donut {
   top: 20px;
   left: 900px;
+}
+
+#fireworks02 {
+  top: 420px;
+  left: 50px;
+}
+
+#colorfulBall {
+  top: 420px;
+  left: 300px;
+}
+
+#palette {
+  top: 420px;
+  left: 600px;
+}
+
+#donut {
+  top: 720px;
+  left: 600px;
+}
+
+#circleGroup {
+  top: 15px;
+  left: 50px;
 }

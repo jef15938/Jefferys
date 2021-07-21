@@ -1,13 +1,15 @@
 body {
   margin: 0;
-  overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
 }
 
-
 canvas {
-  /* position: absolute; */
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 #fireworks {
@@ -23,6 +25,11 @@ canvas {
 #ring {
   top: 20px;
   left: 600px;
+}
+
+#donut {
+  top: 20px;
+  left: 900px;
 }
 
 #fireworks02 {
@@ -43,5 +50,10 @@ canvas {
 #donut {
   top: 720px;
   left: 600px;
+}
+
+#circleGroup {
+  top: 15px;
+  left: 50px;
 }
 /*# sourceMappingURL=main.css.map */
