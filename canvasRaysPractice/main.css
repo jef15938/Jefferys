@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+canvas {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+
+#fireworks {
+  top: 20px;
+  left: 50px;
+}
+
+#flower {
+  top: 20px;
+  left: 300px;
+}
+
+#ring {
+  top: 20px;
+  left: 600px;
+}
+
+#donut {
+  top: 20px;
+  left: 900px;
+}
+
+#fireworks02 {
+  top: 420px;
+  left: 50px;
+}
+
+#colorfulBall {
+  top: 420px;
+  left: 300px;
+}
+
+#palette {
+  top: 420px;
+  left: 600px;
+}
+
+#donut {
+  top: 720px;
+  left: 600px;
+}
+
+#circleGroup {
+  top: 15px;
+  left: 50px;
+}
+/*# sourceMappingURL=main.css.map */
