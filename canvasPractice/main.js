@@ -367,7 +367,7 @@ var StrokeCircle = function (ctx, centerX, centetY, radius, lineWidth) {
 }
 
 StrokeCircle.prototype.clear = function () {
-  // this.ctx.clearRect(0, 0, this.radius * 2, this.radius * 2);
+  clearCircle(this.ctx, this.centerX, this.centerY, this.radius, this.lineWidth);
 }
 
 StrokeCircle.prototype.update = function () {
@@ -395,6 +395,7 @@ StrokeCircle.prototype.update = function () {
 StrokeCircle.prototype.draw = function (strokeColor, isUseGlobalAlpha) {
   var ctx = this.ctx;
   ctx.save();
+  this.clear();
 
   if (isUseGlobalAlpha) {
     ctx.globalAlpha = this.globalAlpha;
@@ -654,3 +655,23 @@ function bindMouseEvent() {
 // 主程式
 initial();
 bindMouseEvent();
+
+
+function clearCircle(context, x, y, radius, strokeLineWidth) {
+  context.save();
+  context.beginPath();
+  context.globalCompositeOperation = 'destination-out';
+  if (strokeLineWidth) {
+    context.lineWidth = strokeLineWidth;
+  }
+  context.arc(x, y, radius, 0, Math.PI * 2, true);
+
+  if (strokeLineWidth) {
+    context.stroke();
+  }
+  else {
+    context.fill();
+  }
+  context.closePath();
+  context.restore();
+}
