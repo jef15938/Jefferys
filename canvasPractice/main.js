@@ -360,30 +360,30 @@ var StrokeCircle = function (ctx, centerX, centetY, radius, lineWidth) {
   this.lineWidth = lineWidth;
 
   this.globalAlpha = 0;
-  this.minGlobalAlpha = 0;
-  this.maxGlobalAlpha = 1;
-  this.globalAlphaVelocity = 0.05;
-  this.isGlobalAlphaAdding = true;
+  this.minGapIndex = 0;
+  this.globalAlphaVelocity = 1;
+  this.isGapIndexAdding = true;
+  this.colorList = [];
 }
 
 StrokeCircle.prototype.clear = function () {
-  // this.ctx.clearRect(0, 0, this.radius * 2, this.radius * 2);
+  clearCircle(this.ctx, this.centerX, this.centerY, this.radius, this.lineWidth);
 }
 
-StrokeCircle.prototype.update = function () {
-  if (this.isGlobalAlphaAdding) {
+StrokeCircle.prototype.update = function (gapNumber) {
+  if (this.isGapIndexAdding) {
     this.globalAlpha += this.globalAlphaVelocity;
-    this.globalAlpha = Math.min(this.globalAlpha, this.maxGlobalAlpha);
-    if (this.globalAlpha >= this.maxGlobalAlpha) {
-      this.isGlobalAlphaAdding = false;
+    this.globalAlpha = Math.min(this.globalAlpha, gapNumber - 1);
+    if (this.globalAlpha >= gapNumber - 1) {
+      this.isGapIndexAdding = false;
       return 'ToMax';
     }
 
   } else {
     this.globalAlpha -= this.globalAlphaVelocity;
-    this.globalAlpha = Math.max(this.globalAlpha, this.minGlobalAlpha);
-    if (this.globalAlpha <= this.minGlobalAlpha) {
-      this.isGlobalAlphaAdding = true;
+    this.globalAlpha = Math.max(this.globalAlpha, this.minGapIndex);
+    if (this.globalAlpha <= this.minGapIndex) {
+      this.isGapIndexAdding = true;
       return 'ToMin';
     }
   }
@@ -392,13 +392,10 @@ StrokeCircle.prototype.update = function () {
 
 }
 
-StrokeCircle.prototype.draw = function (strokeColor, isUseGlobalAlpha) {
+StrokeCircle.prototype.draw = function (strokeColor) {
   var ctx = this.ctx;
   ctx.save();
-
-  if (isUseGlobalAlpha) {
-    ctx.globalAlpha = this.globalAlpha;
-  }
+  this.clear();
   ctx.strokeStyle = strokeColor;
   ctx.lineWidth = this.lineWidth;
   ctx.beginPath();
@@ -409,21 +406,23 @@ StrokeCircle.prototype.draw = function (strokeColor, isUseGlobalAlpha) {
   ctx.restore();
 }
 
-StrokeCircle.prototype.fillColor = function (strokeColor, isResetGlobalAlpha) {
-  if (isResetGlobalAlpha) {
-    this.globalAlpha = 0;
+StrokeCircle.prototype.fillColor = function (strokeColorStart, strokeColorEnd, gapNumber, isReset) {
+  if (isReset) {
+    this.globalAlpha = this.minGapIndex;
+    this.colorList = getColorListBetweenColor(strokeColorStart, strokeColorEnd, gapNumber);
+    this.strokeColor = this.colorList[0];
   }
-  this.isGlobalAlphaAdding = true;
+  this.isGapIndexAdding = true;
 
   this.clear();
-  var updateRed = this.update();
-  this.draw(strokeColor, true);
+  var updateRed = this.update(gapNumber);
+  this.draw(this.colorList[this.globalAlpha]);
 
   if (updateRed === 'ToMax') {
     return;
   }
 
-  this.rafId = requestAnimationFrame(this.fillColor.bind(this, strokeColor, false));
+  this.rafId = requestAnimationFrame(this.fillColor.bind(this, strokeColorStart, strokeColorEnd, gapNumber, false));
 }
 
 
@@ -446,10 +445,7 @@ var CircleGroup = function (ctx, centerX, centerY, minRadius, maxRadius, lineNum
 CircleGroup.prototype.getStrokeCircleList = function () {
   var circleList = [];
   var totalGapNumber = this.lineNumber * 2 - 1;
-  console.log('totalGapNumber: ', totalGapNumber);
   var lineRadiusGap = Math.ceil((this.maxRadius - this.minRadius) / totalGapNumber);
-  console.log('lineRadiusGap: ', lineRadiusGap);
-  // 11
   for (var i = 0; i < this.lineNumber; i++) {
     let circle = new StrokeCircle(circleGroupCtx, this.centerX, this.centerY, this.minRadius + (i * 2 * lineRadiusGap), lineRadiusGap);
     circleList.push(circle);
@@ -490,7 +486,7 @@ CircleGroup.prototype.drawBackground = function () {
 }
 
 
-CircleGroup.prototype.fillCircleGroup = function (time, fillColor) {
+CircleGroup.prototype.fillCircleGroup = function (time, fillColorStart, fillColorEnd, fillColorGapNumber) {
 
   if (this.changeLineColorIndex === this.strokeCircleList.length) {
     this.changeLineColorIndex = 0;
@@ -502,7 +498,7 @@ CircleGroup.prototype.fillCircleGroup = function (time, fillColor) {
     const timeGap = currentTime - this.startTime;
     if (timeGap >= this.changeLineColorUnit) {
       this.startTime = currentTime;
-      this.strokeCircleList[this.changeLineColorIndex].fillColor(fillColor, true);
+      this.strokeCircleList[this.changeLineColorIndex].fillColor(fillColorStart, fillColorEnd, fillColorGapNumber, true);
       this.changeLineColorIndex++;
     }
   }
@@ -511,7 +507,7 @@ CircleGroup.prototype.fillCircleGroup = function (time, fillColor) {
     this.changeLineColorIndex = 0;
   }
 
-  this.rafId = requestAnimationFrame(this.fillCircleGroup.bind(this, this.startTime, fillColor));
+  this.rafId = requestAnimationFrame(this.fillCircleGroup.bind(this, this.startTime, fillColorStart, fillColorEnd, fillColorGapNumber));
 }
 
 
@@ -634,11 +630,11 @@ function bindMouseEvent() {
   });
 
   $(circleGroupCanvas).on('mouseenter', function () {
-    circleGroup.fillCircleGroup(new Date().getTime(), colorLightBlue);
+    circleGroup.fillCircleGroup(new Date().getTime(), colorGray, colorLightBlue, 10);
   });
 
   $(circleGroupCanvas).on('mouseleave', function () {
-    circleGroup.fillCircleGroup(new Date().getTime(), colorGray);
+    circleGroup.fillCircleGroup(new Date().getTime(), colorLightBlue, colorGray, 10);
   });
 
   // $(donutCanvas).on('mouseenter', function () {
@@ -654,3 +650,62 @@ function bindMouseEvent() {
 // 主程式
 initial();
 bindMouseEvent();
+
+
+function clearCircle(context, x, y, radius, strokeLineWidth) {
+  context.save();
+  context.beginPath();
+  context.globalCompositeOperation = 'destination-out';
+  if (strokeLineWidth) {
+    context.lineWidth = strokeLineWidth;
+  }
+  context.arc(x, y, radius, 0, Math.PI * 2, true);
+
+  if (strokeLineWidth) {
+    context.stroke();
+  }
+  else {
+    context.fill();
+  }
+  context.closePath();
+  context.restore();
+}
+
+function hexToRgb(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+
+function getColorListBetweenColor(color1Hex, color2Hex, gapNumber) {
+  if (gapNumber < 2) {
+    return [];
+  }
+  var rgb1 = hexToRgb(color1Hex);
+  var rgb2 = hexToRgb(color2Hex);
+  var r1 = rgb1.r;
+  var g1 = rgb1.g;
+  var b1 = rgb1.b;
+  var r2 = rgb2.r;
+  var g2 = rgb2.g;
+  var b2 = rgb2.b;
+
+  var rGap = (r2 - r1) / (gapNumber - 1);
+  var gGap = (g2 - g1) / (gapNumber - 1);
+  var bGap = (b2 - b1) / (gapNumber - 1);
+
+  const colorList = [];
+
+  for (var i = 0; i < gapNumber; i++) {
+    var resultR = Math.ceil(r1 + (i * rGap));
+    var resultG = Math.ceil(g1 + (i * gGap));
+    var resultB = Math.ceil(b1 + (i * bGap));
+    colorList.push(`rgb(${resultR}, ${resultG}, ${resultB})`);
+  }
+
+  return colorList;
+
+}
