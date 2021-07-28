@@ -161,6 +161,7 @@ var ColorfulBallItem = function (ctx, radius, color = '#111', center) {
 ColorfulBallItem.prototype.draw = function (isColorRandom) {
   var color = isColorRandom ? randomColor() : this.color;
   var ctx = this.ctx;
+  clearCircle(ctx, this.centerX, this.centerY, this.radius + 1);
   ctx.save();
   ctx.beginPath();
   ctx.fillStyle = color;
@@ -247,7 +248,6 @@ ColorfulBall.prototype.updateAndDraw = function (time, isRandomColor) {
     const timeGap = currentTime - this.startTime;
     if (timeGap >= this.changeTimeUnit) {
       this.startTime = currentTime;
-      // this.itemList[this.changeColorIndex].color = 'red';
       this.itemList[this.changeColorIndex].draw(isRandomColor);
       this.changeColorIndex++;
     }
@@ -359,7 +359,7 @@ Palette.prototype.rotate = function () {
   }
 
   this.originDegree += this.rotateVelocity;
-
+  this.clear();
   this.draw();
 
   this.rafId = requestAnimationFrame(this.rotate.bind(this));
@@ -383,21 +383,13 @@ Donut.prototype.draw = function () {
   ctx.save();
   ctx.beginPath();
   ctx.fillStyle = '#00aedc';
-  // ctx.translate(this.centerX, this.centerY);
 
   ctx.arc(150, 150, this.outerRadius, 0, Math.PI * 2);
   ctx.fill();
   ctx.closePath();
-
-  ctx.beginPath();
-
-  ctx.fillStyle = 'white';
-  ctx.arc(150, 150, this.innerRadius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.closePath();
   ctx.restore();
 
-  // ctx.translate(-this.centerX, -this.centerY);
+  clearCircle(ctx, 150, 150, this.innerRadius);
 }
 
 Donut.prototype.clear = function () {
@@ -420,6 +412,7 @@ Donut.prototype.update = function (isGrow) {
   } else {
     this.innerRadius -= this.velocity;
   }
+  this.clear();
   this.draw();
   if (this.innerRadius > this.innerRadiusRange[1] && isGrow) {
     isGrow = false;
@@ -427,6 +420,25 @@ Donut.prototype.update = function (isGrow) {
     isGrow = true;
   }
   this.rafId = requestAnimationFrame(this.update.bind(this, isGrow));
+}
+
+function clearCircle(context, x, y, radius, strokeLineWidth) {
+  context.save();
+  context.beginPath();
+  context.globalCompositeOperation = 'destination-out';
+  if (strokeLineWidth) {
+    context.lineWidth = strokeLineWidth;
+  }
+  context.arc(x, y, radius, 0, Math.PI * 2, true);
+
+  if (strokeLineWidth) {
+    context.stroke();
+  }
+  else {
+    context.fill();
+  }
+  context.closePath();
+  context.restore();
 }
 
 
@@ -481,6 +493,7 @@ function bindMouseEvent() {
   //   colorfulBall.updateAndDraw(new Date().getTime(), false);
   // });
 }
+
 
 
 // 主程式
