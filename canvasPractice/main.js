@@ -1,5 +1,7 @@
 var colorLightBlue = '#00aedc';
 var colorGray = '#eeeee8';
+var colorOrange = '#ec6d45';
+var colorYellow = '#ffe100';
 
 var fireworks;
 var fireworksCanvas = $('#fireworks')[0];
@@ -40,6 +42,14 @@ circleGroupCanvas.width = 650;
 circleGroupCanvas.height = 650;
 $(circleGroupCanvas).width(650);
 $(circleGroupCanvas).height(650);
+
+var lifebuoy;
+var lifebuoyCanvas = $('#lifebuoy')[0];
+var lifebuoyCtx = lifebuoyCanvas.getContext('2d');
+lifebuoyCanvas.width = 600;
+lifebuoyCanvas.height = 600;
+$(lifebuoyCanvas).width(600);
+$(lifebuoyCanvas).height(600);
 
 // 0. 判斷 requestAnimationFrame 支援度
 var requestAnimationFrame = (
@@ -196,7 +206,7 @@ Flower.prototype.draw = function () {
   ctx.scale(this.flowerScale, this.flowerScale);
 
   // 畫 outer
-  ctx.fillStyle = '#ec6d45';
+  ctx.fillStyle = colorOrange;
   ctx.arc(this.centerX - translateX, this.centerY - translateY, this.outerRadius, 0, Math.PI * 2);
   ctx.fill();
 
@@ -598,6 +608,141 @@ CircleGroup.prototype.fillCircleGroup = function (time, fillColorStart, fillColo
 // }
 
 
+// Lifebuoy
+var Lifebuoy = function (ctx, colorList, innerRadius, outerRadius, maxScaleRadius) {
+
+  this.rafId = undefined;
+  this.ctx = ctx;
+  this.colorList = colorList;
+  this.centerX = 300;
+  this.centerY = 300;
+  this.innerRadius = innerRadius;
+  this.outerRadius = outerRadius;
+  this.minScaleRadius = this.outerRadius;
+  this.maxScaleRadius = maxScaleRadius;
+  this.isScaleAdding = true;
+  this.scaleVelocity = 8;
+  this.rotateVelocity = 2;
+  this.stageAngle = 0;
+  this.rotateAngle = 90;
+  this.originDegree = 0;
+  this.colorItemPathList = [];
+
+
+  this.initial();
+}
+
+Lifebuoy.prototype.initial = function () {
+
+
+  var unitDegree = 360 / this.colorList.length;
+
+  for (i = 0; i < this.colorList.length; i++) {
+    let colorItemPath = new Path2D();
+    colorItemPath.fillStyle = this.colorList[i];
+    colorItemPath.moveTo(0, 0);
+    colorItemPath.arc(0, 0, this.outerRadius, Math.PI / 180 * (i * unitDegree) + this.originDegree, Math.PI / 180 * ((i + 1) * unitDegree) + this.originDegree);
+    this.colorItemPathList.push(colorItemPath);
+  }
+
+}
+
+Lifebuoy.prototype.draw = function () {
+  var ctx = this.ctx;
+
+  ctx.save();
+  ctx.translate(this.centerX, this.centerY);
+
+  var unitDegree = 360 / this.colorList.length;
+
+
+  var radiusDiff = this.outerRadius - this.minScaleRadius;
+  for (i = 0; i < this.colorList.length; i++) {
+    var pathCenterDegree = (unitDegree * 0.5) + (i * unitDegree);
+    ctx.save();
+    var offsetX = radiusDiff * Math.cos((Math.PI / 180) * pathCenterDegree);
+    var offsetY = radiusDiff * Math.sin((Math.PI / 180) * pathCenterDegree);
+
+    ctx.translate(offsetX, offsetY);
+    ctx.beginPath();
+    ctx.fillStyle = this.colorList[i];
+    ctx.fill(this.colorItemPathList[i]);
+    ctx.closePath();
+    ctx.restore();
+  }
+
+  ctx.beginPath();
+  ctx.fillStyle = '#ffffff';
+  ctx.moveTo(0, 0);
+  ctx.arc(0, 0, this.innerRadius + radiusDiff, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.closePath();
+
+  ctx.restore();
+
+}
+
+Lifebuoy.prototype.clear = function () {
+  this.ctx.clearRect(0, 0, 600, 600);
+}
+
+Lifebuoy.prototype.stopAnimation = function () {
+  if (this.rafId) {
+    window.cancelAnimationFrame(this.rafId);
+    this.rafId = undefined;
+  }
+}
+
+Lifebuoy.prototype.rotate = function () {
+  if (this.originDegree >= 135) {
+    return;
+  }
+
+  this.originDegree += this.rotateVelocity;
+  this.clear();
+  this.draw();
+
+  this.rafId = requestAnimationFrame(this.rotate.bind(this));
+}
+
+Lifebuoy.prototype.updateBloom = function () {
+
+  if (this.isScaleAdding) {
+    this.outerRadius += this.scaleVelocity;
+  } else {
+    this.outerRadius -= this.scaleVelocity;
+  }
+
+  if (this.outerRadius > this.maxScaleRadius) {
+    this.isScaleAdding = false;
+    return 'ToMax';
+  }
+  if (this.outerRadius < this.minScaleRadius) {
+    this.isScaleAdding = true;
+    return 'ToMin';
+  }
+
+  return '';
+
+}
+
+Lifebuoy.prototype.bloom = function (bloomTimes, endRes) {
+  if (bloomTimes === 0 || !bloomTimes) {
+    return;
+  }
+
+  var paramater;
+  this.clear();
+  var updateRes = this.updateBloom();
+  if (bloomTimes && bloomTimes > 0) {
+    paramater = updateRes === endRes ? bloomTimes - 1 : bloomTimes;
+  }
+
+  this.draw();
+  this.rafId = requestAnimationFrame(this.bloom.bind(this, paramater, endRes));
+}
+
+
 function initial() {
   fireworks = new Fireworks(fireworksCtx, 12);
   fireworks.drawLine();
@@ -613,6 +758,9 @@ function initial() {
 
   circleGroup = new CircleGroup(circleGroupCtx, 325, 325, 30, 300, 11);
   circleGroup.drawBackground();
+
+  lifebuoy = new Lifebuoy(lifebuoyCtx, [colorOrange, colorYellow, colorGray, colorLightBlue, colorOrange, colorYellow, colorGray, colorLightBlue], 100, 200, 300);
+  lifebuoy.draw();
 }
 
 
@@ -644,6 +792,16 @@ function bindMouseEvent() {
   // $(donutCanvas).on('mouseleave', function () {
   //   donut.scaleCenter(1, 'ToMax');
   // });
+
+  $(lifebuoyCanvas).on('mouseenter', function () {
+    lifebuoy.bloom(1, 'ToMax');
+  });
+
+  $(lifebuoyCanvas).on('mouseleave', function () {
+    lifebuoy.bloom(1, 'ToMin');
+  });
+
+
 }
 
 
