@@ -326,13 +326,13 @@ Ring.prototype.rotate = function (rotateAngle, countRotateAngle) {
     countRotateAngle = 0;
   }
 
+  this.clear();
   this.ctx.save();
   var paramater;
   var translateX = this.centerX;
   var translateY = this.centerY;
   this.ctx.translate(translateX, translateY);
   this.ctx.rotate(Math.PI / 180 * countRotateAngle);
-  this.clear();
   this.ctx.drawImage(this.sourceVirtualCanvas, -translateX, -translateY);
 
   this.ctx.restore();

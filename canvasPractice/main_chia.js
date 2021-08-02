@@ -489,9 +489,10 @@ function bindMouseEvent() {
     colorfulBall.updateAndDraw(new Date().getTime(), true);
   });
 
-  // $(colorfulBallCanvas).on('mouseleave', function () {
-  //   colorfulBall.updateAndDraw(new Date().getTime(), false);
-  // });
+  $(colorfulBallCanvas).on('mouseleave', function () {
+    colorfulBall.changeColorIndex = 0;
+    colorfulBall.updateAndDraw(new Date().getTime(), false);
+  });
 }
 
 
