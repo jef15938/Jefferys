@@ -634,6 +634,8 @@ var Lifebuoy = function (ctx, colorList, innerRadius, outerRadius, maxScaleRadiu
 
 Lifebuoy.prototype.initial = function () {
 
+  // ctx.save();
+  // ctx.translate(this.centerX, this.centerY);
 
   var unitDegree = 360 / this.colorList.length;
 
@@ -644,6 +646,8 @@ Lifebuoy.prototype.initial = function () {
     colorItemPath.arc(0, 0, this.outerRadius, Math.PI / 180 * (i * unitDegree) + this.originDegree, Math.PI / 180 * ((i + 1) * unitDegree) + this.originDegree);
     this.colorItemPathList.push(colorItemPath);
   }
+
+  // ctx.restore();
 
 }
 
@@ -714,10 +718,12 @@ Lifebuoy.prototype.updateBloom = function () {
   }
 
   if (this.outerRadius > this.maxScaleRadius) {
+    this.outerRadius = this.maxScaleRadius;
     this.isScaleAdding = false;
     return 'ToMax';
   }
   if (this.outerRadius < this.minScaleRadius) {
+    this.outerRadius = this.minScaleRadius;
     this.isScaleAdding = true;
     return 'ToMin';
   }
