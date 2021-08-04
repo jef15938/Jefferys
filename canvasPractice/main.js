@@ -622,10 +622,13 @@ var Lifebuoy = function (ctx, colorList, innerRadius, outerRadius, maxScaleRadiu
   this.maxScaleRadius = maxScaleRadius;
   this.isScaleAdding = true;
   this.scaleVelocity = 8;
-  this.rotateVelocity = 2;
-  this.stageAngle = 0;
-  this.rotateAngle = 90;
-  this.originDegree = 0;
+
+  this.rotateAngle = 0;
+  this.minRotateAngle = 0;
+  this.maxRotateAngle = 360;
+  this.isRotateAdding = true;
+  this.rotateVelocity = 10;
+
   this.colorItemPathList = [];
 
 
@@ -643,7 +646,7 @@ Lifebuoy.prototype.initial = function () {
     let colorItemPath = new Path2D();
     colorItemPath.fillStyle = this.colorList[i];
     colorItemPath.moveTo(0, 0);
-    colorItemPath.arc(0, 0, this.outerRadius, Math.PI / 180 * (i * unitDegree) + this.originDegree, Math.PI / 180 * ((i + 1) * unitDegree) + this.originDegree);
+    colorItemPath.arc(0, 0, this.outerRadius, Math.PI / 180 * (i * unitDegree), Math.PI / 180 * ((i + 1) * unitDegree));
     this.colorItemPathList.push(colorItemPath);
   }
 
@@ -656,6 +659,8 @@ Lifebuoy.prototype.draw = function () {
 
   ctx.save();
   ctx.translate(this.centerX, this.centerY);
+
+  ctx.rotate(Math.PI / 180 * this.rotateAngle);
 
   var unitDegree = 360 / this.colorList.length;
 
@@ -697,16 +702,56 @@ Lifebuoy.prototype.stopAnimation = function () {
   }
 }
 
-Lifebuoy.prototype.rotate = function () {
-  if (this.originDegree >= 135) {
-    return;
+Lifebuoy.prototype.updateRotate = function () {
+
+  if (this.isRotateAdding) {
+    this.rotateAngle += this.rotateVelocity;
+  } else {
+    this.rotateAngle -= this.rotateVelocity;
   }
 
-  this.originDegree += this.rotateVelocity;
-  this.clear();
-  this.draw();
+  if (this.rotateAngle > this.maxRotateAngle) {
+    this.rotateAngle = this.maxRotateAngle;
+    this.isRotateAdding = false;
+    return 'ToMax';
+  }
+  if (this.rotateAngle < this.minRotateAngle) {
+    this.rotateAngle = this.minRotateAngle;
+    this.isRotateAdding = true;
+    return 'ToMin';
+  }
 
-  this.rafId = requestAnimationFrame(this.rotate.bind(this));
+  return '';
+
+}
+
+Lifebuoy.prototype.rotate = function (startRotateAngle, isRotateAdding, endRes) {
+
+  return new Promise((res, rej) => {
+
+    var self = function (startRotateAngle, isRotateAdding, endRes) {
+      if (startRotateAngle !== undefined) {
+        this.rotateAngle = startRotateAngle;
+      }
+      if (isRotateAdding !== undefined) {
+        this.isRotateAdding = isRotateAdding;
+      }
+      var updateRes = this.updateRotate();
+      if (updateRes === endRes) {
+        console.log('rotateEnd123');
+        res('rotateEnd');
+      }
+      else {
+        this.clear();
+        this.draw();
+
+        this.rafId = requestAnimationFrame(self.bind(this, undefined, undefined, endRes));
+      }
+    }
+
+    self.bind(this, startRotateAngle, isRotateAdding, endRes)();
+
+  });
 }
 
 Lifebuoy.prototype.updateBloom = function () {
@@ -733,20 +778,35 @@ Lifebuoy.prototype.updateBloom = function () {
 }
 
 Lifebuoy.prototype.bloom = function (bloomTimes, endRes) {
-  if (bloomTimes === 0 || !bloomTimes) {
-    return;
-  }
 
-  var paramater;
-  this.clear();
-  var updateRes = this.updateBloom();
-  if (bloomTimes && bloomTimes > 0) {
-    paramater = updateRes === endRes ? bloomTimes - 1 : bloomTimes;
-  }
+  return new Promise((res, rej) => {
+    var self = function (bloomTimes, endRes) {
+      if (bloomTimes === 0 || !bloomTimes) {
+        res('success');
+      }
+      else {
+        var paramater;
+        this.clear();
+        var updateRes = this.updateBloom();
+        if (bloomTimes && bloomTimes > 0) {
+          paramater = updateRes === endRes ? bloomTimes - 1 : bloomTimes;
+        }
 
-  this.draw();
-  this.rafId = requestAnimationFrame(this.bloom.bind(this, paramater, endRes));
+        this.draw();
+        this.rafId = requestAnimationFrame(self.bind(this, paramater, endRes));
+      }
+    }
+
+    self.bind(this, bloomTimes, endRes)();
+  })
+
 }
+
+// Lifebuoy.prototype.rotateAndScale = function () {
+//   this.bloom(1, 'ToMax').then((res) => {
+//     console.log(res);
+//   });
+// }
 
 
 function initial() {
@@ -800,11 +860,17 @@ function bindMouseEvent() {
   // });
 
   $(lifebuoyCanvas).on('mouseenter', function () {
-    lifebuoy.bloom(1, 'ToMax');
+    lifebuoy.rotate(0, true, 'ToMax').then((rotateRes) => {
+      console.log(rotateRes);
+      lifebuoy.bloom(1, 'ToMax');
+    })
   });
 
   $(lifebuoyCanvas).on('mouseleave', function () {
-    lifebuoy.bloom(1, 'ToMin');
+    lifebuoy.rotate(360, false, 'ToMin').then((rotateRes) => {
+      console.log(rotateRes);
+      lifebuoy.bloom(1, 'ToMin');
+    })
   });
 
 
