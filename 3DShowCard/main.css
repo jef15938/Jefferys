@@ -3,35 +3,22 @@ body {
   width: 100vw;
   height: 100vh;
   margin: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
-  -webkit-perspective: 1000px;
-          perspective: 1000px;
+  perspective: 1000px;
 }
 
 .card-02 {
-  -webkit-transform-style: preserve-3d;
-          transform-style: preserve-3d;
+  transform-style: preserve-3d;
   position: relative;
   max-width: 568px;
   border: 2px solid #DDDDDD;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  box-sizing: border-box;
   border-radius: 24px;
-  -webkit-transition: -webkit-transform .5s ease-out;
-  transition: -webkit-transform .5s ease-out;
-  transition: transform .5s ease-out;
-  transition: transform .5s ease-out, -webkit-transform .5s ease-out;
+  transition: transform 0.5s ease-out;
 }
-
 .card-02::before {
   content: "";
   position: absolute;
@@ -41,67 +28,49 @@ body {
   top: -5%;
   left: 0%;
   opacity: 0;
-  -webkit-transform: translateZ(0px);
-          transform: translateZ(0px);
-  -webkit-transition: all .5s ease-out;
-  transition: all .5s ease-out;
+  transform: translateZ(0px);
+  transition: all 0.5s ease-out;
   -webkit-filter: blur(20px);
   -moz-filter: blur(20px);
   -o-filter: blur(20px);
   -ms-filter: blur(20px);
   transform: translateZ(0px);
-  -webkit-transition: all 0.5s ease-out;
   transition: all 0.5s ease-out;
 }
-
 .card-02:hover::before {
   opacity: 1;
-  -webkit-transform: translateZ(-100px);
-          transform: translateZ(-100px);
+  transform: translateZ(-100px);
 }
-
 .card-02__top {
   position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
   padding: 48px 60px 50px 60px;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  justify-content: center;
   border-radius: 24px 24px 0px 0px;
   background: #F8F8F8;
-  -webkit-transition: background 0.5s ease-out;
   transition: background 0.5s ease-out;
 }
-
 .card-02:hover .card-02__top {
   background: #6B8FB7;
 }
-
 .card-02__bottom {
   padding: 32px 40px 40px 40px;
   border-radius: 0px 0px 24px 24px;
   background: #FFFFFF;
 }
-
+.card-02 .card-02-top {
+  transform-style: preserve-3d;
+}
 .card-02 .card-02-top__img-list {
-  -webkit-transform-style: preserve-3d;
-          transform-style: preserve-3d;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  transform-style: preserve-3d;
   display: flex;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
+  flex-wrap: wrap;
   margin-right: -12px;
   margin-bottom: -20px;
-  -webkit-transition: -webkit-transform 0.5s ease-out;
-  transition: -webkit-transform 0.5s ease-out;
   transition: transform 0.5s ease-out;
-  transition: transform 0.5s ease-out, -webkit-transform 0.5s ease-out;
 }
-
 .card-02 .card-02-top__img-list .card-02-top__img-container {
+  transform-style: preserve-3d;
   position: relative;
   display: inline-block;
   width: 102px;
@@ -109,12 +78,10 @@ body {
   margin-right: 12px;
   margin-bottom: 20px;
 }
-
 .card-02 .card-02-top__img-list .card-02-top__img-container > img {
   max-width: 100%;
   max-height: 100%;
 }
-
 .card-02 .card-02-top__img-list .card-02-top__img-container::before {
   content: "";
   position: absolute;
@@ -125,33 +92,22 @@ body {
   opacity: 0;
   top: 0;
   left: 0;
-  -webkit-transform: translateZ(0px);
-          transform: translateZ(0px);
-  -webkit-transition: all .5s ease-out;
-  transition: all .5s ease-out;
+  transform: translateZ(0px);
+  transition: all 0.5s ease-out;
   -webkit-filter: blur(10px);
   -moz-filter: blur(10px);
   -o-filter: blur(10px);
   -ms-filter: blur(10px);
 }
-
 .card-02 .card-02-top__img-list .card-02-top__img-container.shadow-active::before {
   opacity: 1;
-  -webkit-transform: translateZ(-150px);
-          transform: translateZ(-150px);
+  transform: translateZ(-150px);
 }
-
 .card-02 .card-02-top__img-list .card-02-top__img-container--text {
   background: #666666;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
   display: inline-flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  justify-content: center;
+  align-items: center;
   border-radius: 50%;
   font-style: normal;
   font-weight: 500;
@@ -161,10 +117,11 @@ body {
   letter-spacing: 0.08px;
   color: #ffffff;
 }
-
+.card-02 .card-02-bottom {
+  transform-style: preserve-3d;
+}
 .card-02 .card-02-bottom__title {
-  -webkit-transform-style: preserve-3d;
-          transform-style: preserve-3d;
+  transform-style: preserve-3d;
   position: relative;
   font-style: normal;
   font-weight: 500;
@@ -172,36 +129,26 @@ body {
   line-height: 60px;
   letter-spacing: 0.09px;
   color: #333333;
-  -webkit-transition: -webkit-transform 0.5s ease-out;
-  transition: -webkit-transform 0.5s ease-out;
   transition: transform 0.5s ease-out;
-  transition: transform 0.5s ease-out, -webkit-transform 0.5s ease-out;
 }
-
 .card-02 .card-02-bottom__title::before {
   content: "NEUX設計小組";
   font: inherit;
   position: absolute;
   top: 0;
   left: 0;
-  -webkit-transform: translateZ(0px);
-          transform: translateZ(0px);
+  transform: translateZ(0px);
   color: transparent;
   text-shadow: 0 0 5px #333333;
   opacity: 0;
-  -webkit-transition: all .5s ease-out;
-  transition: all .5s ease-out;
+  transition: all 0.5s ease-out;
 }
-
 .card-02 .card-02-bottom__title.shadow-active::before {
   opacity: 1;
-  -webkit-transform: translateZ(-100px);
-          transform: translateZ(-100px);
+  transform: translateZ(-100px);
 }
-
 .card-02 .card-02-bottom__description {
-  -webkit-transform-style: preserve-3d;
-          transform-style: preserve-3d;
+  transform-style: preserve-3d;
   position: relative;
   font-style: normal;
   font-weight: normal;
@@ -209,33 +156,24 @@ body {
   line-height: 46px;
   letter-spacing: -0.06px;
   color: #888888;
-  -webkit-transition: -webkit-transform 0.5s ease-out;
-  transition: -webkit-transform 0.5s ease-out;
   transition: transform 0.5s ease-out;
-  transition: transform 0.5s ease-out, -webkit-transform 0.5s ease-out;
 }
-
 .card-02 .card-02-bottom__description::before {
   content: "20個專案";
   font: inherit;
   position: absolute;
   top: 0;
   left: 0;
-  -webkit-transform: translateZ(0px);
-          transform: translateZ(0px);
+  transform: translateZ(0px);
   color: transparent;
   text-shadow: 0 0 5px #888888;
   opacity: 0;
-  -webkit-transition: all .5s ease-out;
-  transition: all .5s ease-out;
+  transition: all 0.5s ease-out;
 }
-
 .card-02 .card-02-bottom__description.shadow-active::before {
   opacity: 1;
-  -webkit-transform: translateZ(-100px);
-          transform: translateZ(-100px);
+  transform: translateZ(-100px);
 }
-
 .card-02:hover::after {
   content: "";
   position: absolute;
@@ -243,14 +181,10 @@ body {
   left: 0;
   width: calc(100% + 4px);
   height: calc(100% + 4px);
-  border: 6px solid #3C5979;
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
+  border: 6px solid 3C5979;
+  box-sizing: border-box;
   border-radius: 24px;
-  -webkit-transform: translate(-2px, -2px);
-          transform: translate(-2px, -2px);
-  -webkit-filter: drop-shadow(0px 0px 16px rgba(60, 89, 121, 0.4));
-          filter: drop-shadow(0px 0px 16px rgba(60, 89, 121, 0.4));
+  transform: translate(-2px, -2px);
+  filter: drop-shadow(0px 0px 16px rgba(60, 89, 121, 0.4));
   pointer-events: none;
-}
-/*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main.css.map */

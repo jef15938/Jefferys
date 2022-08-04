@@ -37,16 +37,12 @@ body {
     transition: all 0.5s ease-out;
   }
 
-
   &:hover {
     &::before {
       opacity: 1;
       transform: translateZ(-100px);
     }
   }
-
-
-
 
   &__top {
     position: relative;
@@ -56,13 +52,11 @@ body {
     border-radius: 24px 24px 0px 0px;
     background: #F8F8F8;
     transition: background 0.5s ease-out;
-
   }
 
   &:hover &__top {
     background: #6B8FB7;
   }
-
 
   &__bottom {
     padding: 32px 40px 40px 40px;
@@ -71,6 +65,7 @@ body {
   }
 
   .card-02-top {
+    transform-style: preserve-3d;
 
     &__img-list {
       transform-style: preserve-3d;
@@ -81,6 +76,7 @@ body {
       transition: transform 0.5s ease-out;
 
       .card-02-top__img-container {
+        transform-style: preserve-3d;
         position: relative;
         display: inline-block;
         width: 102px;
@@ -92,7 +88,6 @@ body {
           max-width: 100%;
           max-height: 100%;
         }
-
 
         &::before {
           content: "";
@@ -136,10 +131,11 @@ body {
         }
       }
     }
-
   }
 
   .card-02-bottom {
+    transform-style: preserve-3d;
+
     &__title {
       transform-style: preserve-3d;
       position: relative;
@@ -170,8 +166,6 @@ body {
           transform: translateZ(-100px);
         }
       }
-
-
     }
 
     &__description {
@@ -204,12 +198,10 @@ body {
           transform: translateZ(-100px);
         }
       }
-
     }
   }
 
   &:hover {
-
     &::after {
       content: "";
       position: absolute;
@@ -217,7 +209,7 @@ body {
       left: 0;
       width: calc(100% + 4px);
       height: calc(100% + 4px);
-      border: 6px solid #3C5979;
+      border: 6px solid 3C5979;
       box-sizing: border-box;
       border-radius: 24px;
       transform: translate(-2px, -2px);
@@ -225,5 +217,4 @@ body {
       pointer-events: none;
     }
   }
-
 }
